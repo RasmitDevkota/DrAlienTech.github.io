@@ -1,0 +1,70 @@
+body{
+  background-color: gray;
+  font-family: courier;
+}
+nav{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 1%;
+  background-color: gray;
+}
+.menuLink{
+  color: #FFFFFF;
+  margin:1%;
+  font-size: 70%;
+  padding:1%;
+  background-color: black;
+border-radius: 10%;
+}
+.button{
+  text-decoration: none;
+  color: gray;
+  font-family: courier;
+}
+.dropdown {
+  float: left;
+  background: black;
+  overflow: hidden;
+}
+
+.dropdown .dropbtn {
+  font-size: 16px;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: black;
+  font-family: inherit;
+  margin: 0;
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: black;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+  background-color: lightgray;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
