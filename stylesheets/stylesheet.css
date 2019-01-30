@@ -1,5 +1,5 @@
 body{
-  background-color: gray;
+  background-color: #F4C478;
   font-family: courier;
 }
 nav{
@@ -7,7 +7,7 @@ nav{
   flex-direction: row;
   justify-content: center;
   padding: 1%;
-  background-color: gray;
+  background-color: #D09436;
 }
 .menuLink{
   color: #FFFFFF;
@@ -19,7 +19,7 @@ border-radius: 10%;
 }
 .button{
   text-decoration: none;
-  color: gray;
+  color: #D09436;
   font-family: courier;
 }
 .dropdown {
@@ -46,7 +46,7 @@ border-radius: 10%;
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: white;
+  background-color: #D09436;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
@@ -62,7 +62,7 @@ border-radius: 10%;
 }
 
 .dropdown-content a:hover {
-  background-color: lightgray;
+  background-color: #D09436;
 }
 
 .dropdown:hover .dropdown-content {
