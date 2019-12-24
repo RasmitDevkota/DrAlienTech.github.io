@@ -7,14 +7,14 @@ nav{
   flex-direction: row;
   justify-content: center;
   padding: 1%;
-  background-color: #D09436;
+  background-color: #808080;
 }
 .menuLink{
   color: #FFFFFF;
   margin:1%;
   font-size: 70%;
   padding:1%;
-  background-color: black;
+  background-color: bl808080ack;
 border-radius: 10%;
 }
 .button{
