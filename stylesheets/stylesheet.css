@@ -19,12 +19,12 @@ border-radius: 10%;
 }
 .button{
   text-decoration: none;
-  color: #D09436;
+  color: #808080;
   font-family: courier;
 }
 .dropdown {
   float: left;
-  background: #D09436;
+  background: #808080;
   overflow: hidden;
 }
 
