@@ -62,7 +62,7 @@ border-radius: 10%;
 }
 
 .dropdown-content a:hover {
-  background-color: #DE9B32;
+  background-color: #808080;
 }
 
 .dropdown:hover .dropdown-content {
