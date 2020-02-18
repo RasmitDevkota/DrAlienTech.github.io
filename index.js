@@ -16,5 +16,5 @@ io.on('connection', function (socket) {
         io.sockets.emit('chat', data);
     });
 
-    socket.on('typing')
+    socket.on('typing', )
 });
