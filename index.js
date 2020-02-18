@@ -9,6 +9,6 @@ var server = app.listen(4000, function () {
 app.use(express.static('public'));
 
 var io = socket(server);
-io.on('connection', function () {
+io.on('connection', function (socket) {
     console.log("socket")
 });
