@@ -1,5 +1,5 @@
 var express = require('express');
-var socket = require('socket.io')
+var socket = require('socket.io');
 
 var app = express();
 var server = app.listen(4000, function () {
