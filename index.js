@@ -8,4 +8,4 @@ var server = app.listen(4000, function () {
 
 app.use(express.static('public'));
 
-var io = socket();
+var io = socket(server, );
