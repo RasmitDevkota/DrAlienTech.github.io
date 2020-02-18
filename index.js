@@ -13,6 +13,6 @@ io.on('connection', function (socket) {
     console.log("socket", socket.id);
 
     socket.on('chat', function (data) {
-        io.emit('chat',data);
+        io.emit('chat', data);
     });
 });
