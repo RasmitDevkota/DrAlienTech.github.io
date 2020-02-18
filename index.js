@@ -1,3 +1,3 @@
 var app = require('express');
 
-var app 
+var app = express();
