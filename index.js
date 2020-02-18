@@ -15,4 +15,6 @@ io.on('connection', function (socket) {
     socket.on('chat', function (data) {
         io.sockets.emit('chat', data);
     });
+
+    socket.on('')
 });
