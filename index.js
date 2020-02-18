@@ -12,5 +12,5 @@ var io = socket(server);
 io.on('connection', function (socket) {
     console.log("socket", socket.id);
 
-    socket.on('chat', function(data))
+    socket.on('chat', function (data))
 });
