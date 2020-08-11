@@ -1,22 +1,47 @@
-var express = require('express');
-var socket = require('socket.io');
+const puppeteer = require('puppeteer');
 
-var app = express();
-var server = app.listen(4000, function () {
-    console.log('port 4000');
-});
+const url = "https://education.co1.qualtrics.com/jfe/form/SV_bejJXGXAQamV4TX";
 
-app.use(express.static('public'));
+(async () => {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
 
-var io = socket(server);
-io.on('connection', function (socket) {
-    console.log("socket", socket.id);
+    await page.setRequestInterception(true);
 
-    socket.on('chat', function (data) {
-        io.sockets.emit('chat', data);
+    page.on('request', (req) => {
+        if (req.resourceType() == 'font' || req.resourceType() == 'image') {
+            req.abort();
+        }
+        else {
+            req.continue();
+        }
     });
 
-    socket.on('typing', function (data) {
-        socket.broadcast.emit('typing', data);
+    await page.goto(url);
+
+
+    let data = await page.evaluate(() => {
+        let html = document.body.innerHTML;
+
+        var i = html.indexOf("1.");
+
+        console.log(i);
+
+        var str = html.substr(i, 500);
+
+        return { str };
     });
+
+    console.log(data);
+
+    // const select = `//*[@id="Wrapper"]`;
+    // const [element] = await page.$x(select);
+    // const content = await element.getProperty(`textContent`);
+    // const contentText = await content.jsonValue();
+
+    // console.log(contextText[contentText.toString().indexOf("1.")]);
+
+    browser.close();
+})().catch(function (e) {
+    console.log(e);
 });
