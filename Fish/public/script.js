@@ -17,7 +17,7 @@ document.addEventListener('keydown', function (event) {
 		case "ArrowUp": case "w":
 			var currentPosition = document.getElementById("fish").style.marginTop;
 			currentPosition = Number(currentPosition.substr(0, currentPosition.indexOf("px")));
-			var increment = (currentPosition >= 0.05 * window.innerHeight) ? (0.03 * window.innerHeight) : 0;
+			var increment = (currentPosition >= 0.05 * window.innerHeight) ? (0.01 * window.innerHeight) : 0;
 			var newPosition = currentPosition - increment;
 
 			document.getElementById("fish").style.marginTop = newPosition + "px";
@@ -29,7 +29,7 @@ document.addEventListener('keydown', function (event) {
 		case "ArrowDown": case "s":
 			var currentPosition = document.getElementById("fish").style.marginTop;
 			currentPosition = Number(currentPosition.substr(0, currentPosition.indexOf("px")));
-			var increment = (currentPosition <= 0.8 * window.innerHeight) ? (0.03 * window.innerHeight) : 0;
+			var increment = (currentPosition <= 0.8 * window.innerHeight) ? (0.01 * window.innerHeight) : 0;
 			var newPosition = currentPosition + increment;
 
 			document.getElementById("fish").style.marginTop = newPosition + "px";
@@ -216,7 +216,7 @@ async function spawner() {
 			classList = "flow";
 		}
 
-		if (newMarginLeft <= 0) {
+		if ((newMarginLeft + document.getElementById(name).width / 2) <= 0) {
 			document.getElementById(name).remove();
 
 			return clearInterval(move);
@@ -269,6 +269,13 @@ async function collisionDetection() {
 				x1 > fx1 && x1 < fx2 &&
 				y2 > fy1 && y2 < fy2
 			)
+			||
+			(
+				fx2 >= (x1 + 0.45 * (x2 - x1)) &&
+				fx2 <= (x2 - 0.45 * (x2 - x1)) &&
+				y1 < fy1 && y2 > fy1 &&
+				y1 < fy2 && y2 > fy2
+			)
 		) {
 			object.remove();
 
@@ -288,6 +295,12 @@ async function collisionDetection() {
 			document.getElementById("health").textContent = `${health}%`;
 			
 			if (health <= 0) {
+				document.getElementById("fish").src = "dies.png";
+				document.getElementById("fish").style.zIndex = 100000;
+
+				var audio = new Audio('dies.mp3');
+				audio.play();
+
 				setTimeout(async function () {
 					alert("Game over! Your score was " + distance + "!");
 
