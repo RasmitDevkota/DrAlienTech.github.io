@@ -1,0 +1,175 @@
+<html>
+
+    <head>
+        <title>The Standard Model</title>
+
+        <meta
+        name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Fonts -->
+
+        <script src='https://www.gstatic.com/firebasejs/7.23.0/firebase.js'></script>
+
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script
+            id="MathJax-script"
+            async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [
+                        [
+                            '$', '$'
+                        ],
+                        [
+                            '\\(', '\\)'
+                        ]
+                    ]
+                }
+            };
+        </script>
+
+    </head>
+
+    <body id="body" style="font-size: 30px; text-align: center; margin-top: 2%;">
+        $
+          \mathcal{L}_{SM} = -\frac{1}{2} \partial_{\nu} g^{a}_{\mu}
+          - g_{s} f^{abc} \partial_{\mu} g^{a}_{\nu} g^{b}_{\mu} g^{c}_{\nu}
+          - \frac{1}{4} g^{2}_{s} f^{abc} f^{ade} g^{b}_{\mu} g^{c}_{\nu} g^{d}_{\mu} g^{e}_{\nu}
+          + \frac{1}{2} ig^{2}_{s} (\overline{q}^{\sigma}_{i} \gamma^{\mu} q^{\sigma}_{j}) g^{a}_{\mu}
+          + \overline{G}^{a} \partial^{2} G^{a}
+        $
+        <br>
+        $
+          + g_{s} f^{abc} \partial_{\mu} \overline{G}^{a} G^{b} g^{c}_{\mu}
+          - \partial_{\nu} W^{+}_{\mu} \partial_{\nu} W^{-}_{\mu}
+          - M^{2} W^{+}_{\mu} W^{-}_{\mu}
+          - \frac{1}{2} \partial_{\nu} Z^{0}_{\mu} \partial_{\nu} Z^{0}_{\mu}
+          - \frac{1}{2c^{2}_{w}} M^{2} Z^{0}_{\mu} Z^{0}_{\mu}
+        $
+        <br>
+        $
+          - \frac{1}{2} \partial_{\mu} A_{\nu} \partial_{\mu} A_{\nu}
+          - \frac{1}{2} \partial_{\mu} H \partial_{\mu} H
+          - \frac{1}{2} m^{2}_{h} H^{2}
+          - \partial_{\mu} \phi^{+} \partial_{\mu} \phi^{-}
+          - M^{2} \phi^{+} \phi^{-}
+          - \frac{1}{2} \partial_{\mu} \phi^{0} \partial_{\mu} \phi^{0}
+        $
+        <br>
+        $
+          - \frac{1}{2c^{2}_{w}} M \phi^{0} \phi^{0}
+          - \beta_{h}
+          (
+              \frac{2M^{2}}{g^{2}}
+            + \frac{2M}{g}
+            + \frac{1}{2} H^{2}
+            + \phi^{0} \phi^{0}
+            + 2 \phi^{+} \phi^{-}
+          )
+          + \frac{2M^{4}}{g^{2}} \alpha_{h}
+        $
+        <br>
+        $
+          - igc_{w}
+          (
+            \partial_{\nu} Z^{0}_{\mu}
+            (
+              W^{+}_{\mu} W^{-}_{\nu}
+              - W^{+}_{\nu} W^{-}_{\mu}
+            )
+            - Z^{0}_{\nu}
+            (
+                W^{+}_{\mu} \partial_{\nu} W^{-}_{\mu}
+              - W^{-}_{\mu} \partial_{\nu} W^{+}_{\mu}
+            )
+            + Z^{0}_{\mu}
+            (
+                W^{+}_{\nu} \partial_{\nu} W^{-}_{\mu}
+              - W^{-}_{\nu} \partial_{\nu} W^{+}_{\mu}
+            )
+          )
+        $
+        <br>
+        $
+          - igs_{w}
+          (
+            \partial_{\nu} A_{\mu}
+            (
+                W^{+}_{\mu} W^{-}_{\nu}
+              - W^{+}_{\nu} W^{-}_{\mu}
+            )
+            - A_{\nu}
+            (
+                W^{+}_{\mu} \partial_{\nu} W^{-}_{\mu}
+              - W^{-}_{\mu} \partial_{\nu} W^{+}_{\mu}
+            )
+            + A_{\mu}
+            (
+                W^{+}_{\nu} \partial_{\nu} W^{-}_{\mu}
+              - W^{-}_{\nu} \partial_{\nu} W^{+}_{\mu}
+            )
+          )
+        $
+        <br>
+        $
+          - \frac{1}{2} g^{2} W^{+}_{\mu} W^{-}_{\mu} W^{+}_{\nu} W^{-}_{\nu}
+          + \frac{1}{2} g^{2} W^{+}_{\mu} W^{-}_{\nu} W^{+}_{\mu} W^{-}_{\nu}
+          + g^{2} c^{2}_{w}
+          (
+              Z^{0}_{\mu} W^{+}_{\nu} Z^{0}_{\mu} W^{-}_{\nu}
+            - Z^{0}_{\mu} Z^{0}_{\mu} W^{+}_{\nu} W^{-}_{\nu}
+          )
+        $
+        <br>
+        $
+          + g^{2} s^{2}_{w}
+          (
+              A_{\mu} W^{+}_{\mu} A_{\nu} W^{-}_{\nu}
+            - A_{\mu} A_{\mu} W^{+}_{\nu} W^{-}_{\nu}
+          )
+          + g^{2} s_{w} c_{w}
+          (
+                A_{\mu} Z^{0}_{\nu}
+              (
+                  W^{+}_{\mu} W^{-}_{\nu}
+                - W^{+}_{\nu} W^{-}_{\mu}
+              )
+              - 2 A_{\mu} Z^{0}_{\nu} W^{+}_{\nu} W^{-}_{\nu}
+          )
+        $
+        <br>
+        $
+          - g \alpha
+          (
+              H^{3}
+            + H \phi^{0} \phi^{0}
+            + 2 H \phi^{+} \phi^{-}
+          )
+          - \frac{1}{8} g^{2} \alpha_{h}
+          (
+              H^{4}
+            + (\phi^{0})^{4}
+            + 4 (\phi^{+} \phi^{-})^{2}
+            + 4 (\phi^{0})^{2} \phi^{+} \phi^{-}
+            + 4 H^{2} \phi^{+} \phi^{-}
+            + 2 (\phi^{0})^{2} H^{2}
+          )
+        $
+        <br>
+        $
+          - g M W^{+}_{\mu} W^{-}_{\mu} H
+          - \frac{1}{2} g \frac{M}{c^{2}_{w}} Z^{0}_{\mu} Z^{0}_{\mu} H
+          - \frac{1}{2} i g
+          (
+              W^{+}_{\mu}
+            (
+              
+            )
+          )
+        $
+    </body>
+
+</html>
+

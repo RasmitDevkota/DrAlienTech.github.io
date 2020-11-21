@@ -1,0 +1,183 @@
+<html>
+
+<head>
+  <title>The Missing Pretzels</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
+
+  <script src='https://www.gstatic.com/firebasejs/7.23.0/firebase.js'></script>
+
+  <script src="script.js"></script>
+  
+  <style>
+	* {
+		font-family: 'PT Sans', sans-serif;
+	}
+
+	body {
+		background-color: #d9598c;
+		padding: 0%;
+		overflow: hidden;
+	}
+
+	#homeDiv {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+	}
+
+	#homeDivSub {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.homeDivButtonGroup {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+	}
+
+	#startButton {
+		position: relative;
+		margin-top: 15%;
+		width: fit-content;
+		background-color: #ff80b379;
+		font-size: 80px;
+		border-color: rgb(31, 31, 31);
+		color: rgb(29, 29, 29);
+	}
+
+	#helpButton {
+		position: relative;
+		margin-top: 10%;
+		background: none;
+		font-size: 50px;
+		border: none;
+		color: rgb(29, 29, 29);
+	}
+
+	#backgroundButton {
+		position: relative;
+		margin-top: 30%;
+		background-color: #ff80b379;
+		font-size: 80px;
+		border-color: rgb(31, 31, 31);
+		color: rgb(29, 29, 29);
+	}
+
+	#backgroundSelect {
+		display: none;
+		flex-direction: column;
+		position: absolute;
+		margin-top: 20%;
+		background-color: rgba(95, 95, 95, 0.815);
+		font-size: 50px;
+		border: 2px solid black;
+		color: rgb(29, 29, 29);
+		justify-content: center;
+	}
+
+	.backgroundSelectOption {
+		padding: 3%;
+		padding-bottom: 1.5%;
+		width: 30%;
+	}
+
+	.backgroundImageOption {
+		width: 100%;
+		background: none;
+	}
+
+	#closeBackgroundButton {
+		position: relative;
+		width: fit-content;
+		font-size: 60px;
+		background: none;
+		border: none;
+		color: rgb(189, 0, 0);
+		margin-bottom: 2%;
+	}
+
+	#startButton:hover, #helpButton:hover, #backgroundButton:hover {
+		background-color: #d13171;
+		border: 1px solid black;
+	}
+
+	#closeBackgroundButton:hover {
+		background-color: gray;
+		border: 2px solid black;
+	}
+	
+	#gameDiv {
+		display: none;
+	}
+
+	#score {
+		z-index: 1000;
+		position: absolute;
+		font-size: 60px;
+		margin-top: 0%;
+		background-color: aliceblue;
+		border: 1px solid black;
+	}
+
+	#background {
+		width: 100%;
+		margin-top: 1%;
+	}
+  </style>
+
+</head>
+
+<body>
+	<div id="homeDiv">
+		<div id="homeDivSub">
+			<div class="homeDivButtonGroup">
+				<button id="helpButton" onclick="window.open('https://drive.google.com/file/d/1MQkQRXrwmwYZ3pqmJM0QIM_bBz__hx6L/view?usp=sharing', '_blank');">Android Edition (Beta)</button>
+			</div>
+
+			<div class="homeDivButtonGroup">
+				<button id="startButton" onclick="start()">Start</button>
+			</div>
+
+			<div class="homeDivButtonGroup">
+				<button id="backgroundButton" onclick="show('backgroundSelect')">Change Background Image</button>
+			</div>
+
+			<div id="backgroundSelect">
+				<div style="display: flex;">
+					<div class="backgroundSelectOption">
+						<img class="backgroundImageOption" src="background.png" onclick="setBackground('background.png')">
+					</div>
+
+					<div class="backgroundSelectOption">
+						<img class="backgroundImageOption" src="other-background.png" onclick="setBackground()">
+					</div>
+
+					<div class="backgroundSelectOption">
+						<button class="backgroundImageOption">
+							<img src="addbackground.png" style="width: 100%;">
+						</button>
+					</div>
+				</div>
+
+				<div style="display: flex; justify-content: center;">
+					<button id="closeBackgroundButton" onclick="hide('backgroundSelect')">
+						<i class="fas fa-window-close"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+    <div id="gameDiv">
+		<p id="score">Score: 0🥨</p>
+		<img id="background" src="background.png">
+    </div>
+</body>
+
+</html>
