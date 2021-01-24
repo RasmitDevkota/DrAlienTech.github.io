@@ -1,0 +1,261 @@
+<html>
+
+  <head>
+
+    <title>Yongle Encyclopedia</title>
+
+	<script src='https://www.gstatic.com/firebasejs/8.2.1/firebase.js'></script>
+	
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Yusei+Magic&display=swap" rel="stylesheet">
+    
+	<script>
+		function display(elem) {
+			if (document.getElementById(elem).style.display == "none") {
+				document.getElementById(elem).style.display = "";
+			} else {
+				document.getElementById(elem).style.display = "none";
+			}
+		}
+	</script>
+	
+	<style>
+		body {
+			background-color: rgb(41, 41, 41);
+			color: rgb(202, 202, 202);
+			font-family: 'Yusei Magic', sans-serif;
+			margin-bottom: 2%;
+		}
+
+		#header {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			text-align: center;
+		}
+		
+		#home {
+			text-align: center;
+		}
+
+		#cover {
+			margin-top: 2%;
+			margin-bottom: 2%;
+		}
+
+		#home > h3, #page-content {
+			text-align: center;
+			width: 55%;
+			margin-left: 22.5%;
+		}
+
+		.navigation {
+			border: none;
+			background-color: rgb(175, 175, 175);
+			width: 6%;
+			/* height: 5%; */
+			padding: 0.1%;
+			font-size: x-large;
+			text-align: center;
+		}
+
+		#page-content {
+			display: flex;
+			flex-direction: column;
+		}
+
+		hr {
+			width: 30%;
+		}
+
+		a {
+			color: rgb(68, 152, 248);
+		}
+
+		/* a */
+
+		#buttons {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-evenly;
+		}
+	</style>
+
+  </head>
+
+  <body>
+
+	<div id="header">
+		<h1>
+			Yongle Encyclopedia
+			<br>
+			永樂大典 (Yǒnglè Dàdiǎn)
+		</h1>
+		<h2>
+			Rasmit Devkota
+		</h2>
+	</div>
+
+	<div id="main">
+		<div id="home">
+			<img id="cover" src="cover.jpg" alt="...">
+
+			<h3>
+				The Yongle Encyclopedia was a wonderous collection of scholarly works from Ancient China compiled by thousands of scholars and spanning virtually every
+				subject in existence at the time.
+			</h3>
+	
+			<h3>
+				Press the button below to begin learning about the amazing history behind the extremely large encyclopedia!
+			</h3>
+
+			<br>
+	
+			<button class="navigation" onclick="display('home');display('page-1');">
+				Begin
+			</button>
+		</div>
+
+		<div class="page" id="page-1" style="display: none;">
+			<div id="page-content">
+				<h4>
+					What was it?
+					
+					<br>
+					<br>
+					
+					The Yongle Encyclopedia was a collection of 22,937 chapters combined into 11,095 volumes of writing by thousands of Chinese scholars
+					commanded by Zhu Di, the third emperor of the Ming dynasty from 1402-1424. Its immense length gave it the title of the longest encyclopedia
+					in the world. Zhu Di is known to have loved reading, so it makes sense that he wanted to compile so much literature together. The encyclopedia
+					was completed at the Imperial Academy in Nanjing, where Nanjing University stands today.
+
+					<br>
+					<br>
+
+					<figure style="width: 50%; margin-left: 25%;">
+						<img width="100%" src="imperial.jpg" alt="...">
+                        <figcaption style="margin-top: 1%">
+                            Imperial Academy in Nanjing
+                        </figcaption>
+                    </figure>
+				</h4>
+
+				<hr>
+
+				<h4>
+					Contents
+
+					<br>
+					<br>
+					
+					Zhu Di aimed for the encyclopedia to contain all of Chinese knowledge, so it featured a variety of subjects included astronomy, history,
+					philosophy, art, literature, religion, and many others. The organization of the encyclopedia is also very interesting because, unlike English,
+					Chinese languages do not have any alphabetical order, so instead the encyclopedia was ordered using rhyming syllables. With 370 million Chinese
+					characters equivalent to nearly 250 million English words, the encyclopedia is even larger than the Encyclopedia Brittanica.
+				</h4>
+
+				<hr>
+
+				<h4>
+					Significance
+
+					<br>
+					<br>
+					
+					The Yongle Encyclopedia is very valuable as a collection of works from the beginning of Chinese history until the Ming dynasty. Although many
+					volumes are missing, we have still been able to analyze thousands of years of literature and study Chinese culture and history through the 
+					large collection. Many plays and dramas have even been performed on stage in modern times, and many unseen poems and tales have been published.
+
+					<br>
+					<br>
+
+					<figure style="width: 70%; margin-left: 15%;">
+						<img width="100%;" src="opera.jpg" alt="...">
+						<figcaption style="margin-top: 1%">
+							<i>The Number One Scholar Zhang Xie</i> performed by the Zhejiang Yongjia Kunqu Opera Troupe
+                        </figcaption>
+                    </figure>
+				</h4>
+
+				<hr>
+
+				<h4>
+					Legacy
+
+					<br>
+					<br>
+					
+					The original copy of the encyclopedia was lost, but the reason for its disppearance is still a mystery. One theory historians have is that
+					the encyclopedia was destroyed in the 1449 fire in Nanjing, a disastrous fire that burned down three entire halls and many other parts of
+					the palace. Other historians believe that it may have been burned or destroyed during the late Ming dynasty or early Qing dynasty. Some
+					even believe that it is actually hidden inside the palace walls of the Qing dynasty. In addition, many colonists including British soldiers
+					took sections of the encyclopedia for themselves when invading Beijing.
+
+					<br>
+					<br>
+
+					Now, only a copy remains, ordered by Emperor Jiajing after the 1449 Nanjing fire. However, of the copied edition, only 400 volumes have
+					been found. Interestingly, the volumes that have been recovered were not only discovered in China but also worldwide in places like Huntington
+					Library in California, US.
+
+					<br>
+					<br>
+
+					<figure style="width: 30%; margin-left: 35%;">
+						<img style="width: 100%;" src="image.jpg" alt="...">
+						<figcaption style="margin-top: 1%">
+							A portion of the encyclopedia found in the Huntington Library
+                        </figcaption>
+                    </figure>
+				</h4>
+			</div>
+
+			<br>
+			<br>
+
+			<div id="buttons">
+				<button class="navigation" onclick="display('home');display('page-1');">
+					Home
+				</button>
+				
+				<button class="navigation" onclick="display('page-1');display('page-2');">
+					Sources
+				</button>
+			</div>
+		</div>
+
+		<div class="page" id="page-2" style="display: none;">
+			<div id="page-content">
+				<h2>
+					Sources
+				</h2>
+
+				<p>
+					<a href="https://www.britannica.com/topic/Yongle-dadian">https://www.britannica.com/topic/Yongle-dadian</a>
+					<br>
+					<a href="https://ilab.org/articles/beach-reading-yongle-encyclopedia">https://ilab.org/articles/beach-reading-yongle-encyclopedia</a>
+					<br>
+					<a href="https://www.historyofinformation.com/detail.php?id=2375">https://www.historyofinformation.com/detail.php?id=2375</a>
+					<br>
+					<a href="https://www.newworldencyclopedia.org/entry/Yongle_Encyclopedia">https://www.newworldencyclopedia.org/entry/Yongle_Encyclopedia</a>
+					<br>
+					<a href="https://www.huntington.org/verso/2018/08/organizing-encyclopedia-chinese-style">https://www.huntington.org/verso/2018/08/organizing-encyclopedia-chinese-style</a>
+					<br>
+					<a href="https://www.cof.gov.hk/2014/en/program_kunqu.php">https://www.cof.gov.hk/2014/en/program_kunqu.php</a>
+					<br>
+					<a href="https://www.wdl.org/en/item/3019/">Recovered Volumes</a>
+				</p>
+			</div>
+
+			<br>
+
+			<div id="buttons">
+				<button class="navigation" onclick="display('page-2');display('page-1');">
+					Back
+				</button>
+			</div>
+		</div>
+	</div>
+
+  </body>
+</html>

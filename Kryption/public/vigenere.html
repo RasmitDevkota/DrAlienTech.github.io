@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>Kryption</title>
+
+		<link rel="preconnect" href="https://fonts.gstatic.com">
+		<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500&display=swap" rel="stylesheet">
+
+		<script src='https://www.gstatic.com/firebasejs/8.2.1/firebase.js'></script>
+
+		<style>
+			* {
+				font-family: 'Chakra Petch', sans-serif;
+				font-size: larger;
+				color: white;
+				background-color: black;
+			}
+
+			html {
+				display: flex;
+				justify-content: center;
+				margin-top: 1%;
+			}
+
+			body {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				width: 50%;
+			}
+
+			input, button {
+				border: 2px solid white;
+			}
+
+			button {
+				width: 30%;
+				margin-top: 3%;
+			}
+
+			button:hover {
+				cursor: pointer;
+			}
+
+			#main {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				text-align: center;
+			}
+
+			#charText {
+				word-wrap: break-word;
+			}
+
+			#mappings {
+				column-count: 2;
+				column-fill: balance;
+			}
+
+			#timeWrapper {
+				margin-top: 2%;
+			}
+
+			#time {
+				font-size: 80%;
+			}
+
+			#answerBox {
+				margin-top: 2%;
+				width: 60%;
+			}
+
+			#newMorseButtonWrapper {
+				display: flex;
+				justify-content: center;
+			}
+
+			#newMorseButton {
+				font-size: 80%;
+			}
+
+			#charCount {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				text-align: center;
+				margin-top: 1%;
+			}
+
+			#charCountValue {
+				margin: 1%;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<div id="main">
+			<div id="charDisplay">
+				<p id="charText"></p>
+
+				<p id="mappings"></p>
+				<p id="help">Unknowns → +</p>
+			</div>
+
+			<div id="answerBoxWrapper">
+				<input id="answerBox" placeholder="Type here...">
+			</div>
+
+			<div id="timeWrapper">
+				<p id="time">Convert the numbers into Morse Code using the replacements above!</p>
+			</div>
+
+			<div id="newMorseButtonWrapper">
+				<button id="newMorseButton" class="noselect" onclick="generate()">New Cipher</button>
+			</div>
+		</div>
+
+		<!-- <div id="charCount">
+			<p id="charCountValue">
+				# of Characters: <input id="charCountInput" type="number" min="1" max="100">	
+			</p>
+		</div> -->
+
+		<script>
+			const charDisplay = document.getElementById("charText");
+			const mappings = document.getElementById("mappings");
+			const help = document.getElementById("help");
+			// const charCountValue = document.getElementById("charCountValue");
+			// const charCountInput = document.getElementById("charCountInput");
+			const answerBox = document.getElementById("answerBox");
+			const time = document.getElementById("time");
+			const newMorseButton = document.getElementById("newMorseButton");
+
+			// charCountInput.oninput = function() {
+			// 	if (this.value > 50) {
+			// 		this.value = 50;
+			// 	}
+				
+			// 	let count = this.value;
+
+			// 	return generate(count);
+			// };
+
+			let defaultNumber = 5;
+
+			function generate(number = defaultNumber) {
+				answerBox.value = "";
+
+				time.innerHTML = "Convert the numbers into Morse Code using the replacements above!";
+
+				charDisplay.style.color = "white";
+				mappings.style.color = "white";
+				help.style.color = "white";
+				answerBox.style.color = "white";
+				time.style.color = "white";
+				newMorseButton.style.color = "white";
+
+				var numbertext = "";
+
+				for (let i = 0; i < number; i++) {
+					numbertext += "0123456789"[Math.floor(Math.random() * 10)];
+				}
+
+				var morsetext = "";
+				var encryption = { };
+
+				for (numb of numbertext) {
+					if (!Object.keys(encryption).includes(numb)) {
+						var char = "/*-+"[Math.floor(Math.random() * 4)];
+
+						encryption[numb] = char;
+
+						morsetext += char;
+					} else {
+						morsetext += encryption[numb];
+					}
+				}
+
+				var encryptionString = "";
+
+				for (key of Object.keys(encryption)) {
+					if (encryption[key] != "+") {
+						encryptionString += `${key} → ${encryption[key]}<br>`;
+					}
+				}
+
+				charDisplay.innerHTML = numbertext;
+				mappings.innerHTML = encryptionString;
+
+				const startTime = new Date();
+
+				answerBox.oninput = function () {
+					if (this.value == morsetext) {
+						charDisplay.style.color = "#00FA9A";
+						mappings.style.color = "#00FA9A";
+						help.style.color = "#00FA9A";
+						answerBox.style.color = "#00FA9A";
+						time.style.color = "#00FA9A";
+						newMorseButton.style.color = "#00FA9A";
+
+						var timeScore = (new Date() - startTime) / 1000;
+						time.innerHTML = `Correct! You solved it in ${timeScore} seconds!`;
+					} else if (!morsetext.includes(this.value)) {
+						charDisplay.style.color = "#FF6347";
+						mappings.style.color = "#FF6347";
+						help.style.color = "#FF6347";
+						answerBox.style.color = "#FF6347";
+						time.style.color = "#FF6347";
+						newMorseButton.style.color = "#FF6347";
+
+						time.innerHTML = `Oops, something's wrong! Check for mistakes!`;
+					} else {
+						charDisplay.style.color = "white";
+						mappings.style.color = "white";
+						help.style.color = "white";
+						answerBox.style.color = "white";
+						time.style.color = "white";
+						newMorseButton.style.color = "white";
+
+						time.innerHTML = "Convert the numbers into Morse Code using the replacements above!";
+					}
+				};
+			}
+
+			document.addEventListener('keydown', function (event) {
+				switch (event.key) {
+					case "Enter":
+						generate();
+					break;
+				}
+			});
+
+			generate();
+		</script>
+
+	</body>
+</html>

@@ -1,0 +1,164 @@
+<html>
+
+    <head>
+        <title>Error Occurred!</title>
+
+        <meta
+		name="viewport" content="width=device-width, initial-scale=1">
+		
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
+		
+		<script src='https://www.gstatic.com/firebasejs/8.1.0/firebase.js'></script>
+		
+		<link rel="stylesheet" href="index.css">
+
+    </head>
+
+	<body id="body">
+		<nav>
+			&nbsp;<a href="">
+				Play
+			</a>&nbsp;
+
+			&nbsp;<a href="howtoplay.html">
+				How To Play
+			</a>&nbsp;
+
+			&nbsp;<a href="othergames.html">
+				Other Games
+			</a>&nbsp;
+		</nav>
+
+		<h3>
+			<u>
+				<b>
+					Error Occurred!
+				</b>
+			</u>
+		</h3>
+
+		<div id="matrix-container">
+			<table id="error-correction-matrix">
+                <tbody>
+					<tr>
+						<td class="matrix-input noselect" id="0">———</td>
+						<td class="matrix-input noselect" id="1">———</td>
+						<td class="matrix-input noselect" id="10">———</td>
+						<td class="matrix-input noselect" id="11">———</td>
+					</tr>
+
+					<tr>
+						<td class="matrix-input noselect" id="100">———</td>
+						<td class="matrix-input noselect" id="101">———</td>
+						<td class="matrix-input noselect" id="110">———</td>
+						<td class="matrix-input noselect" id="111">———</td>
+					</tr>
+
+					<tr>
+						<td class="matrix-input noselect" id="1000">———</td>
+						<td class="matrix-input noselect" id="1001">———</td>
+						<td class="matrix-input noselect" id="1010">———</td>
+						<td class="matrix-input noselect" id="1011">———</td>
+					</tr>
+
+					<tr>
+						<td class="matrix-input noselect" id="1100">———</td>
+						<td class="matrix-input noselect" id="1101">———</td>
+						<td class="matrix-input noselect" id="1110">———</td>
+						<td class="matrix-input noselect" id="1111">———</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<p id="time">Click the square with an error!</p>
+
+		<button id="newPuzzleButton" class="noselect" onclick="window.location.reload();">New Puzzle</button>
+
+		<script>
+			generate();
+
+			function generate() {
+				const startTime = new Date();
+
+				var p1 = 0;
+				var p2 = 0;
+				var p3 = 0;
+				var p4 = 0;
+				var pO = 0;
+
+				for (let i = 0; i < 16; i++) {
+					if (![0, 1, 2, 4, 8].includes(i)) {
+						var id = (i >>> 0).toString(2);
+
+						var randomBit = Math.floor(Math.random() * 2);
+
+						document.getElementById(id).innerHTML = `&nbsp;${randomBit}&nbsp;`;
+
+						if ([3, 5, 7, 9, 11, 13, 15].includes(i)) {
+							p1 += randomBit;
+						}
+
+						if ([3, 6, 7, 10, 11, 14, 15].includes(i)) {
+							p2 += randomBit;
+						}
+
+						if ([5, 6, 7, 12, 13, 14, 15].includes(i)) {
+							p3 += randomBit;
+						}
+
+						if ([9, 10, 11, 12, 13, 14, 15].includes(i)) {
+							p4 += randomBit;
+						}
+
+						pO += randomBit;
+					}
+				}
+
+				p1 = p1 % 2;
+				p2 = p2 % 2;
+				p3 = p3 % 2;
+				p4 = p4 % 2;
+
+				document.getElementById("1").innerHTML = `&nbsp;${p1}&nbsp;`;
+				document.getElementById("10").innerHTML = `&nbsp;${p2}&nbsp;`;
+				document.getElementById("100").innerHTML = `&nbsp;${p3}&nbsp;`;
+				document.getElementById("1000").innerHTML = `&nbsp;${p4}&nbsp;`;
+
+				pO += p1 + p2 + p3 + p4;
+				pO = pO % 2;
+
+				document.getElementById("0").innerHTML = `&nbsp;${pO}&nbsp;`;
+
+				const bitArray = ["0", "1", "10", "11", "100", "101", "110", "111", "1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111"];
+
+				var errorElement = document.getElementById(bitArray[Math.floor(Math.random() * 16)]);
+				var errorBitOriginal = Number(errorElement.innerHTML[6]);
+				var errorBitNew = Math.abs(1 - errorBitOriginal);
+				errorElement.innerHTML = `&nbsp;${errorBitNew}&nbsp;`;
+
+				console.log(errorElement);
+
+				for (const bit of bitArray) {
+					if (bit == errorElement.id) {
+						errorElement.onclick = function () {
+							errorElement.style.backgroundColor = "#58FA58";
+							document.getElementById("newPuzzleButton").style.display = "unset";
+
+							const endTime = new Date();
+							const elaspedTime = ((endTime - startTime)/1000).toFixed(3);
+							document.getElementById("time").innerHTML = `You solved this puzzle in ${elaspedTime} seconds!`;
+						}
+					} else {
+						document.getElementById(bit).onclick = function () {
+							document.getElementById(bit).style.backgroundColor = "#FE2E2E";
+							document.getElementById("time").innerHTML = `That's wrong! Try again!`;
+						}
+					}
+				}
+			}
+		</script>
+	</body>
+
+</html>
+

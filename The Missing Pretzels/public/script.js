@@ -93,13 +93,13 @@ function start() {
 			var name = "wonkek" + pretzelCount;
 
 			var drop = `
-				<img id="${name}" class="wonkek" src="wonkekspin.gif" width="4%" height="8%" onmouseover="pretzelClick('${name}')" style="z-index: ${pretzelCount}; position: absolute; margin-top: -5%; margin-left: ${left}px;">
+				<img id="${name}" class="wonkek" src="wonkekspin.gif" width="4%" height="8%" onmouseover="pretzelClick('${name}')" style="z-index: ${pretzelCount}; position: absolute; margin-top: -15%; margin-left: ${left}px;">
 			`;
 		} else {
 			var name = "pretzel" + pretzelCount;
 
 			var drop = `
-				<img id="${name}" class="pretzel" src="pretzel.svg" width="61" onmouseover="pretzelClick('${name}')" style="z-index: ${pretzelCount}; position: absolute; margin-top: -5%; margin-left: ${left}px;">
+				<img id="${name}" class="pretzel" src="pretzel.svg" width="61" onmouseover="pretzelClick('${name}')" style="z-index: ${pretzelCount}; position: absolute; margin-top: -15%; margin-left: ${left}px;">
 			`;
 		}
 

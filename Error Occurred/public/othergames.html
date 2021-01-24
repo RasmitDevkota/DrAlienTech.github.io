@@ -1,0 +1,74 @@
+<html>
+
+    <head>
+        <title>Error Occurred!</title>
+
+        <meta
+		name="viewport" content="width=device-width, initial-scale=1">
+		
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
+		
+        <link rel="stylesheet" href="index.css">
+
+        <script src='https://www.gstatic.com/firebasejs/8.1.0/firebase.js'></script>
+
+    </head>
+
+	<body id="body">
+		<nav>
+			&nbsp;<a href="index.html">
+				Play
+			</a>&nbsp;
+
+			&nbsp;<a href="">
+				How To Play
+			</a>&nbsp;
+
+			&nbsp;<a href="othergames.html">
+				Other Games
+			</a>&nbsp;
+		</nav>
+
+		<h3>
+			<u>
+				<b>
+					Other Games
+				</b>
+			</u>
+        </h3>
+        
+        <h5 style="font-size: 40%;">Check out some of my other web games! Click on the underlined game name to open it in a new tab!</h5>
+
+        <p style="font-size: 40%;">
+            <a onclick="window.open('https://wypretzel.web.app', '_blank');">The Missing Pretzels:</a>
+
+            Catch all of the pretzels falling from the sky by hovering over them!
+        </p>
+
+        <p style="font-size: 25%; margin-bottom: 1%;">
+            Hint: The pretzels are worth 1 point while the spinning emojis are worth 5 points.
+        </p>
+
+        <iframe id="themissingpretzels" style="width: 50%; height: 55%; margin-bottom: 2%;" src="https://wypretzel.web.app" frameborder="0"></iframe>
+
+        <p style="font-size: 40%;">
+            <a onclick="window.open('https://swimsaway.web.app', '_blank');"><i>Swims Away:</i></a>
+
+            Swim away from the bear while avoiding all of the objects in the way!
+        </p>
+
+        <p style="font-size: 25%; margin-bottom: 1%;">
+            Hint: If you get hit by an object, your health will go down and the bear will slowly catch up to you! Keep moving!
+        </p>
+
+        <iframe id="swimsaway" onmouseover="window.addEventListener('scroll', noScroll);" onmouseout="window.removeEventListener('scroll', noScroll);" style="width: 50%; height: 60%; margin-bottom: 2%;" src="https://swimsaway.web.app" frameborder="0"></iframe>
+
+        <script>
+            function noScroll() {
+                window.scrollTo(0, document.documentElement.clientHeight);
+            }
+        </script>
+	</body>
+
+</html>
+

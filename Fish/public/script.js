@@ -100,9 +100,9 @@ async function spawner() {
 		return;
 	}
 
-	// var right = Math.floor(Math.random() * 8);
+	var right = Math.floor(Math.random() * 8);
 	// var right = 0;
-	var right = distance % 8;
+	// var right = distance % 8;
 	
 	switch (right) {
 		case 0:
@@ -161,9 +161,9 @@ async function spawner() {
 			break;
 		case 6:
 			var name = "object" + distance;
-			var classList = "flow";
-			var src = "blue_fish.png";
-			var dimensions = `width="8%" height="10%"`;
+			var classList = "flow gravity";
+			var src = "rabbit.png";
+			var dimensions = `width="8%" height="12%"`;
 			var marginTop = 0.5 * window.innerHeight;
 			var marginLeft = window.innerWidth * 0.98;
 			var delay = 1000;
@@ -239,8 +239,59 @@ async function collisionDetection() {
 	const fy1 = Number(fish.style.marginTop.substr(0, fish.style.marginTop.indexOf("px")));
 	const fy2 = fish.height + fy1;
 
-	for (object of document.getElementById("gameDiv").children) { 
-		if (object.tagName != "IMG" || ["background", "bear", "fish"].includes(object.id)) continue;
+	for (object of document.getElementById("gameDiv").children) {
+		if (object.tagName != "IMG") continue;
+
+		if (["background.png", "bear.png", "fish.png", "rabbit.png"].includes(object.src.split("/")[object.src.split("/").length - 1])) {
+			if (object.src.includes("rabbit")) {
+				const x1 = Number(object.style.marginLeft.substr(0, object.style.marginLeft.indexOf("px")));
+				const x2 = object.width + x1;
+	
+				const y1 = Number(object.style.marginTop.substr(0, object.style.marginTop.indexOf("px")));
+				const y2 = object.height + y1;
+				
+				if (
+					(
+						x2 > fx1 && x2 < fx2 &&
+						y1 > fy1 && y1 < fy2
+					)
+					||
+					(
+						x1 > fx1 && x1 < fx2 &&
+						y1 > fy1 && y1 < fy2
+					)
+					||
+					(
+						x2 > fx1 && x2 < fx2 &&
+						y2 > fy1 && y2 < fy2
+					)
+					||
+					(
+						x1 > fx1 && x1 < fx2 &&
+						y2 > fy1 && y2 < fy2
+					)
+				) {
+					object.remove();
+
+					if (health < 100) {
+						health += Math.min(15, 100 - health);
+
+						var increment = (Math.min(15, 100 - health) * window.innerWidth * 0.03 + bear.width) / 10;
+	
+						var beforeLeft = document.getElementById("fish").style.marginLeft;
+						var newMarginLeft = Number(beforeLeft.substr(0, beforeLeft.indexOf("px"))) + increment;
+						document.getElementById("fish").style.marginLeft = newMarginLeft + "px";
+	
+						document.getElementById("healthNumber").textContent = `Health: ${health}`;
+	
+						document.getElementById("health").style.width = `${health}%`;
+						document.getElementById("health").textContent = `${health}%`;
+					}
+				}
+			}
+			
+			continue;
+		}
 
 		const x1 = Number(object.style.marginLeft.substr(0, object.style.marginLeft.indexOf("px")));
 		const x2 = object.width + x1;
@@ -249,32 +300,38 @@ async function collisionDetection() {
 		const y2 = object.height + y1;
 	
 		if (
-			// 4 Corners
 			(
-				x2 > fx1 && x2 < fx2 &&
-				y1 > fy1 && y1 < fy2
+				!object.id.includes("volcano") &&
+				// 4 Corners
+				(
+					x2 > fx1 && x2 < fx2 &&
+					y1 > fy1 && y1 < fy2
+				)
+				||
+				(
+					x1 > fx1 && x1 < fx2 &&
+					y1 > fy1 && y1 < fy2
+				)
+				||
+				(
+					x2 > fx1 && x2 < fx2 &&
+					y2 > fy1 && y2 < fy2
+				)
+				||
+				(
+					x1 > fx1 && x1 < fx2 &&
+					y2 > fy1 && y2 < fy2
+				)
 			)
 			||
 			(
-				x1 > fx1 && x1 < fx2 &&
-				y1 > fy1 && y1 < fy2
-			)
-			||
-			(
-				x2 > fx1 && x2 < fx2 &&
-				y2 > fy1 && y2 < fy2
-			)
-			||
-			(
-				x1 > fx1 && x1 < fx2 &&
-				y2 > fy1 && y2 < fy2
-			)
-			||
-			(
-				fx2 >= (x1 + 0.45 * (x2 - x1)) &&
-				fx2 <= (x2 - 0.45 * (x2 - x1)) &&
-				y1 < fy1 && y2 > fy1 &&
-				y1 < fy2 && y2 > fy2
+				// object.id.includes("volcano") &&
+				// (
+					fx2 >= (x1 + 0.45 * (x2 - x1)) &&
+					fx2 <= (x2 - 0.45 * (x2 - x1)) &&
+					y1 < fy1 && y2 > fy1 &&
+					y1 < fy2 && y2 > fy2
+				// )
 			)
 		) {
 			object.remove();
