@@ -10,6 +10,8 @@
 
 		<script src='https://www.gstatic.com/firebasejs/8.2.1/firebase.js'></script>
 
+		<script src="https://chancejs.com/chance.min.js"></script>
+
 		<style>
 			* {
 				font-family: 'Chakra Petch', sans-serif;
@@ -29,6 +31,7 @@
 				flex-direction: column;
 				justify-content: center;
 				width: 50%;
+				margin-top: 2%;
 			}
 
 			input, button {
@@ -51,13 +54,8 @@
 				text-align: center;
 			}
 
-			#charText {
+			#questionText {
 				word-wrap: break-word;
-			}
-
-			#mappings {
-				column-count: 2;
-				column-fill: balance;
 			}
 
 			#timeWrapper {
@@ -73,37 +71,98 @@
 				width: 60%;
 			}
 
-			#newMorseButtonWrapper {
+			#newVigenereButtonWrapper {
 				display: flex;
 				justify-content: center;
 			}
 
-			#newMorseButton {
+			#newVigenereButton {
 				font-size: 80%;
 			}
 
-			#charCount {
+			#settingsButtonWrapper {
+				display: flex;
+				justify-content: center;
+				font-size: 80%;
+			}
+
+			#settings {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				position: absolute;
+				z-index: 1000;
+				width: 30%;
+				margin-top: 5%;
+				margin-left: 7.5%;
+				margin-right: 7.5%;
+				padding: 2% 2%;
+				background-color: rgb(27, 27, 27);
+				border: 10px solid rgb(68, 68, 68);
+			}
+
+			#settings p, #settings button {
+				font-size: 70%;
+			}
+
+			.settingsField, .settingsValue, #closeSettingsWrapper, #settings > p {
+				background-color: unset;
+			}
+
+			.settingsField {
 				display: flex;
 				flex-direction: column;
 				justify-content: center;
 				text-align: center;
-				margin-top: 1%;
 			}
 
-			#charCountValue {
-				margin: 1%;
+			.settingsValue {
+				text-align: center;
+			}
+
+			.settingsValue > a:hover {
+				cursor: pointer;
+			}
+
+			.settingsInput {
+				margin-top: 2%;
+				width: 50%;
+			}
+
+			#closeSettingsWrapper {
+				display: flex;
+				justify-content: center;
 			}
 		</style>
 	</head>
 
+	<p style="z-index: 999; margin-top: -5%;">
+		<button onclick="window.location='index.html'">Morse</button>
+	</p>
+
 	<body>
 
-		<div id="main">
-			<div id="charDisplay">
-				<p id="charText"></p>
+		<div id="settings" style="display: none">
+			<div id="charCount" class="settingsField">
+				<p id="charCountValue" class="settingsValue">
+					# of Characters (1-50) <br> <input id="charCountInput" class="settingsInput" type="number" min="1" max="50" placeholder="Default: 5">
+					<a onclick="resetCharCount();" style="background-color: unset; font-size: 130%; line-height: 200%; width: 20%; height: fit-content;">Reset</a>
+				</p>
+			</div>
 
-				<p id="mappings"></p>
-				<p id="help">Unknowns → +</p>
+			<p>
+				Note: Changes are saved on your device but it is recommended to refresh the page in order to make sure all changes take place.
+			</p>
+
+			<div id="closeSettingsWrapper">
+				<button id="closeSettings" class="noselect" onclick="document.getElementById('settings').style.display = 'none'">Close</button>
+			</div>
+		</div>
+
+		<div id="main">
+			<div id="questionDisplay">
+				<p id="questionText"></p>
+				<p id="keyText"></p>
 			</div>
 
 			<div id="answerBoxWrapper">
@@ -111,117 +170,164 @@
 			</div>
 
 			<div id="timeWrapper">
-				<p id="time">Convert the numbers into Morse Code using the replacements above!</p>
+				<p id="time">Encode the plaintext using the key!</p>
 			</div>
 
-			<div id="newMorseButtonWrapper">
-				<button id="newMorseButton" class="noselect" onclick="generate()">New Cipher</button>
+			<div id="newVigenereButtonWrapper">
+				<button id="newVigenereButton" class="noselect" onclick="generate()">New Cipher</button>
+			</div>
+			
+			<div id="settingsButtonWrapper">
+				<button id="settingsButton" class="noselect" onclick="settings()">Settings</button>
 			</div>
 		</div>
 
-		<!-- <div id="charCount">
-			<p id="charCountValue">
-				# of Characters: <input id="charCountInput" type="number" min="1" max="100">	
-			</p>
-		</div> -->
-
 		<script>
-			const charDisplay = document.getElementById("charText");
-			const mappings = document.getElementById("mappings");
-			const help = document.getElementById("help");
-			// const charCountValue = document.getElementById("charCountValue");
-			// const charCountInput = document.getElementById("charCountInput");
+			const questionText = document.getElementById("questionText");
+			const keyText = document.getElementById("keyText");
 			const answerBox = document.getElementById("answerBox");
 			const time = document.getElementById("time");
-			const newMorseButton = document.getElementById("newMorseButton");
+			const newVigenereButton = document.getElementById("newVigenereButton");
+			const settingsButton = document.getElementById("settingsButton");
+			
+			const charCountInput = document.getElementById("charCountInput");
 
-			// charCountInput.oninput = function() {
-			// 	if (this.value > 50) {
-			// 		this.value = 50;
-			// 	}
-				
-			// 	let count = this.value;
+			let count = (Number(localStorage.getItem("vigenereCount"))) ? Number(localStorage.getItem("vigenereCount")) : 5;
 
-			// 	return generate(count);
-			// };
+			charCountInput.placeholder = `Current: ${count}`;
 
-			let defaultNumber = 5;
+			let mode = "e";
 
-			function generate(number = defaultNumber) {
+			function settings() {
+				document.getElementById("settings").style.display = "flex";
+			}
+
+			charCountInput.oninput = function() {
+				if (this.value > 50) {
+					this.value = 50;
+				}
+
+				if (this.value == 0 || this.value.toString() == "") {
+					localStorage.setItem("vigenereCount", "5");
+					count = 5;
+					charCountInput.placeholder = `Default: 5`;
+				} else {
+					localStorage.setItem("vigenereCount", this.value.toString());
+					count = this.value;
+					charCountInput.placeholder = `Current: ${count}`;
+				}
+
+				generate();
+			};
+
+			function resetCharCount() {
+				localStorage.setItem("vigenereCount", "5");
+				count = 5;
+				charCountInput.placeholder = `Default: 5`;
+				charCountInput.value = ``;
+
+				generate();
+			}
+
+			function generate(number = count) {
 				answerBox.value = "";
 
-				time.innerHTML = "Convert the numbers into Morse Code using the replacements above!";
+				time.innerHTML = "Encode the plaintext using the key!";
 
-				charDisplay.style.color = "white";
-				mappings.style.color = "white";
-				help.style.color = "white";
+				questionText.style.color = "white";
+				keyText.style.color = "white";
 				answerBox.style.color = "white";
 				time.style.color = "white";
-				newMorseButton.style.color = "white";
+				newVigenereButton.style.color = "white";
+				settingsButton.style.color = "white";
 
-				var numbertext = "";
+				let plaintext = "";
+				let ciphertext = "";
+				let key = chance.word({ length: 5 }).toUpperCase();
+
+				let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 				for (let i = 0; i < number; i++) {
-					numbertext += "0123456789"[Math.floor(Math.random() * 10)];
+					let seed = Math.floor(Math.random() * 10);
+
+					plaintext += alphabet[seed];
+
+					ciphertext += alphabet[(alphabet.indexOf(key[i % 5]) + seed) % 26];
 				}
 
-				var morsetext = "";
-				var encryption = { };
-
-				for (numb of numbertext) {
-					if (!Object.keys(encryption).includes(numb)) {
-						var char = "/*-+"[Math.floor(Math.random() * 4)];
-
-						encryption[numb] = char;
-
-						morsetext += char;
-					} else {
-						morsetext += encryption[numb];
-					}
+				if (mode == "e") {
+					questionText.innerHTML = plaintext;
+				} else {
+					questionText.innerHTML = ciphertext;
 				}
 
-				var encryptionString = "";
+				keyText.innerHTML = key;
 
-				for (key of Object.keys(encryption)) {
-					if (encryption[key] != "+") {
-						encryptionString += `${key} → ${encryption[key]}<br>`;
-					}
-				}
-
-				charDisplay.innerHTML = numbertext;
-				mappings.innerHTML = encryptionString;
+				console.log(plaintext, ciphertext, key);
 
 				const startTime = new Date();
 
 				answerBox.oninput = function () {
-					if (this.value == morsetext) {
-						charDisplay.style.color = "#00FA9A";
-						mappings.style.color = "#00FA9A";
-						help.style.color = "#00FA9A";
-						answerBox.style.color = "#00FA9A";
-						time.style.color = "#00FA9A";
-						newMorseButton.style.color = "#00FA9A";
+					if (mode == "e") {
+						if (this.value == ciphertext) {
+							questionText.style.color = "#00FA9A";
+							keyText.style.color = "#00FA9A";
+							answerBox.style.color = "#00FA9A";
+							time.style.color = "#00FA9A";
+							newVigenereButton.style.color = "#00FA9A";
+							settingsButton.style.color = "#00FA9A";
 
-						var timeScore = (new Date() - startTime) / 1000;
-						time.innerHTML = `Correct! You solved it in ${timeScore} seconds!`;
-					} else if (!morsetext.includes(this.value)) {
-						charDisplay.style.color = "#FF6347";
-						mappings.style.color = "#FF6347";
-						help.style.color = "#FF6347";
-						answerBox.style.color = "#FF6347";
-						time.style.color = "#FF6347";
-						newMorseButton.style.color = "#FF6347";
+							var timeScore = (new Date() - startTime) / 1000;
+							time.innerHTML = `Correct! You solved it in ${timeScore} seconds!`;
+						} else if (!ciphertext.includes(this.value)) {
+							questionText.style.color = "#FF6347";
+							keyText.style.color = "#FF6347";
+							answerBox.style.color = "#FF6347";
+							time.style.color = "#FF6347";
+							newVigenereButton.style.color = "#FF6347";
+							settingsButton.style.color = "#FF6347";
 
-						time.innerHTML = `Oops, something's wrong! Check for mistakes!`;
+							time.innerHTML = `Oops, something's wrong! Check for mistakes!`;
+						} else {
+							questionText.style.color = "white";
+							keyText.style.color = "white";
+							answerBox.style.color = "white";
+							time.style.color = "white";
+							newVigenereButton.style.color = "white";
+							settingsButton.style.color = "white";
+
+							time.innerHTML = "Encode the plaintext using the key!";
+						}
 					} else {
-						charDisplay.style.color = "white";
-						mappings.style.color = "white";
-						help.style.color = "white";
-						answerBox.style.color = "white";
-						time.style.color = "white";
-						newMorseButton.style.color = "white";
+						if (this.value == plaintext) {
+							questionText.style.color = "#00FA9A";
+							keyText.style.color = "#00FA9A";
+							answerBox.style.color = "#00FA9A";
+							time.style.color = "#00FA9A";
+							newVigenereButton.style.color = "#00FA9A";
+							settingsButton.style.color = "#00FA9A";
 
-						time.innerHTML = "Convert the numbers into Morse Code using the replacements above!";
+							var timeScore = (new Date() - startTime) / 1000;
+							time.innerHTML = `Correct! You solved it in ${timeScore} seconds!`;
+						} else if (!plaintext.includes(this.value)) {
+							questionText.style.color = "#FF6347";
+							keyText.style.color = "#FF6347";
+							answerBox.style.color = "#FF6347";
+							time.style.color = "#FF6347";
+							newVigenereButton.style.color = "#FF6347";
+							settingsButton.style.color = "#FF6347";
+
+							time.innerHTML = `Oops, something's wrong! Check for mistakes!`;
+						} else {
+							questionText.style.color = "white";
+							keyText.style.color = "white";
+							answerBox.style.color = "white";
+							time.style.color = "white";
+							newVigenereButton.style.color = "white";
+							settingsButton.style.color = "white";
+
+							time.innerHTML = "Decode the ciphertext using the key!";
+						}
 					}
 				};
 			}
