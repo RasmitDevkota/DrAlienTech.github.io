@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>Kryption</title>
+
+		<link rel="preconnect" href="https://fonts.gstatic.com">
+		<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500&display=swap" rel="stylesheet">
+
+		<script src='https://www.gstatic.com/firebasejs/8.2.1/firebase.js'></script>
+
+		<style>
+			* {
+				font-family: 'Chakra Petch', sans-serif;
+				font-size: larger;
+				color: white;
+				background-color: black;
+			}
+
+			html {
+				display: flex;
+				justify-content: center;
+				margin-top: 1%;
+			}
+
+			body {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				width: 50%;
+				margin-top: 2%;
+			}
+
+			input {
+				border: 2px solid white;
+			}
+
+			#main {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				text-align: center;
+			}
+
+            #heartbean {
+                word-wrap: break-word;
+            }
+		</style>
+	</head>
+
+	<body>
+
+		<div id="main">
+            <p>Text</p>
+			<input type="text" id="input">
+
+            <p>Heartbean:</p>
+            <p id="heartbean"></p>
+		</div>
+
+		<script>
+            const baconianMap = {
+                "A": "\:heartbean\:\:heartbean\:\:heartbean\:\:heartbean\:\:heartbean\:",
+                "B": "\:heartbean\:\:heartbean\:\:heartbean\:\:heartbean\:\:sciencebean\:",
+                "C": "\:heartbean\:\:heartbean\:\:heartbean\:\:sciencebean\:\:heartbean\:",
+                "D": "\:heartbean\:\:heartbean\:\:heartbean\:\:sciencebean\:\:sciencebean\:",
+                "E": "\:heartbean\:\:heartbean\:\:sciencebean\:\:heartbean\:\:heartbean\:",
+                "F": "\:heartbean\:\:heartbean\:\:sciencebean\:\:heartbean\:\:sciencebean\:",
+                "G": "\:heartbean\:\:heartbean\:\:sciencebean\:\:sciencebean\:\:heartbean\:",
+                "H": "\:heartbean\:\:heartbean\:\:sciencebean\:\:sciencebean\:\:sciencebean\:",
+                "I": "\:heartbean\:\:sciencebean\:\:heartbean\:\:heartbean\:\:heartbean\:",
+                "J": "\:heartbean\:\:sciencebean\:\:heartbean\:\:heartbean\:\:heartbean\:",
+                "K": "\:heartbean\:\:sciencebean\:\:heartbean\:\:heartbean\:\:sciencebean\:",
+                "L": "\:heartbean\:\:sciencebean\:\:heartbean\:\:sciencebean\:\:heartbean\:",
+                "M": "\:heartbean\:\:sciencebean\:\:heartbean\:\:sciencebean\:\:sciencebean\:",
+                "N": "\:heartbean\:\:sciencebean\:\:sciencebean\:\:heartbean\:\:heartbean\:",
+                "O": "\:heartbean\:\:sciencebean\:\:sciencebean\:\:heartbean\:\:sciencebean\:",
+                "P": "\:heartbean\:\:sciencebean\:\:sciencebean\:\:sciencebean\:\:heartbean\:",
+                "Q": "\:heartbean\:\:sciencebean\:\:sciencebean\:\:sciencebean\:\:sciencebean\:",
+                "R": "\:sciencebean\:\:heartbean\:\:heartbean\:\:heartbean\:\:heartbean\:",
+                "S": "\:sciencebean\:\:heartbean\:\:heartbean\:\:heartbean\:\:sciencebean\:",
+                "T": "\:sciencebean\:\:heartbean\:\:heartbean\:\:sciencebean\:\:heartbean\:",
+                "U": "\:sciencebean\:\:heartbean\:\:heartbean\:\:sciencebean\:\:sciencebean\:",
+                "V": "\:sciencebean\:\:heartbean\:\:heartbean\:\:sciencebean\:\:sciencebean\:",
+                "W": "\:sciencebean\:\:heartbean\:\:sciencebean\:\:heartbean\:\:heartbean\:",
+                "X": "\:sciencebean\:\:heartbean\:\:sciencebean\:\:heartbean\:\:sciencebean\:",
+                "Y": "\:sciencebean\:\:heartbean\:\:sciencebean\:\:sciencebean\:\:heartbean\:",
+                "Z": "\:sciencebean\:\:heartbean\:\:sciencebean\:\:sciencebean\:\:sciencebean\:",
+            };
+
+			var input = document.getElementById("input");
+
+            input.onchange = function () {
+                var encrypted = "";
+
+                for (letter of input.value) {
+                    encrypted += baconianMap[letter.toUpperCase()];
+                }
+
+                console.log(encrypted);
+
+                document.getElementById("heartbean").innerHTML = encrypted;
+            };
+		</script>
+
+	</body>
+</html>
