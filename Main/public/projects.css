@@ -1,0 +1,10 @@
+.project {
+    width: 80%;
+    margin: 0% 10% 2% 10%;
+}
+
+.project > a {
+    font-size: 2vw;
+    cursor: pointer;
+    text-decoration: underline;
+}
