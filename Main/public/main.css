@@ -1,0 +1,97 @@
+@font-face {
+  font-family: 'Alef Hebrew';
+  font-style: normal;
+  font-weight: 400;
+  src: url(//fonts.gstatic.com/ea/alefhebrew/v4/Alef-Regular.eot);
+  src: url(//fonts.gstatic.com/ea/alefhebrew/v4/Alef-Regular.eot?#iefix) format('embedded-opentype'),
+       url(//fonts.gstatic.com/ea/alefhebrew/v4/Alef-Regular.woff2) format('woff2'),
+       url(//fonts.gstatic.com/ea/alefhebrew/v4/Alef-Regular.woff) format('woff'),
+       url(//fonts.gstatic.com/ea/alefhebrew/v4/Alef-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Alef Hebrew';
+  font-style: normal;
+  font-weight: 700;
+  src: url(//fonts.gstatic.com/ea/alefhebrew/v4/Alef-Bold.eot);
+  src: url(//fonts.gstatic.com/ea/alefhebrew/v4/Alef-Bold.eot?#iefix) format('embedded-opentype'),
+       url(//fonts.gstatic.com/ea/alefhebrew/v4/Alef-Bold.woff2) format('woff2'),
+       url(//fonts.gstatic.com/ea/alefhebrew/v4/Alef-Bold.woff) format('woff'),
+       url(//fonts.gstatic.com/ea/alefhebrew/v4/Alef-Bold.ttf) format('truetype');
+}
+
+:root {
+    /* Basic Colors */
+    --b-light: #f0ebf1;
+    --b-sand: #e0bba1;
+    --b-dark: #212625;
+    --b-beige: #e6e3df;
+    --b-brown: #ba9277;
+    --b-navy: #4a4e5a;
+    --b-shade: #33312b;
+    --b-white: #ffffff;
+    --b-skin: #f6e5dc;
+
+    /* AlienTech Colors */
+    --at-green: #b3ed99;
+    --at-lightgreen: #cce7bc;
+    --at-darkgreen: #7aa16a;
+    --at-shadowgreen: #375720;
+}
+
+* {
+    color: var(--at-darkgreen);
+}
+
+body {
+    margin: 0px;
+    background-color: var(--b-shade);
+    font-family: "Alef Hebrew",
+            “Helvetica Neue”,
+            Helvetica,
+            Arial,
+            sans-serif;
+}
+
+nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    background-color: black;
+}
+
+nav > div > img {
+    height: 15vh;
+    margin: 2vh 0vh 0vh 0vh;
+    cursor: pointer;
+}
+
+nav > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+nav > div > a {
+    margin: 0.9vw 0vw 0.9vw 0vw;
+    width: 4vw;
+    font-size: 1.8vw;
+    text-decoration: none;
+}
+
+body > div {
+    width: 100%;
+}
+
+.title {
+    text-align: center;
+    font-size: 5vw;
+    margin: 1vh 0vh 0vh 0vh;
+}
+
+.cover {
+    width: 40vw;
+    height: auto;
+    padding: 0%;
+    margin: 0vh 30vw 0vh 30vw;
+}

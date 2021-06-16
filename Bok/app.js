@@ -1,23 +1,25 @@
 const fs = require("fs");
-const { connect } = require("node:http2");
 
 // Main
-const text = fs.readFile("./text.txt").replace(/(,|\.|-)/g, "").split(" ");
+fs.readFile("./text.txt", (e, d) => {
+    const text = d.toString().replace(/(,|\.|-)/g, "").split(" ");
+    const skew = new Skew(text);
 
-const connectionSpace = ConnectionSpace(text);
+    console.log(skew.connections(1));
+});
 
 // Utilities
-class ConnectionSpace {
+class Skew {
     nodes = [];
     connections = [];
 
     constructor(_nodes) {
-        for (node in _nodes) {
-            this.nodes.push(Node(node));
+        for (let node of _nodes) {
+            this.nodes.push(new Node(node));
         }
     }
 
-    get connections(order) {
+    connections(order) {
         if (this.connections[order].length == 0) {
             this.connections[order] = initializeRandomConnections(order);
         }
@@ -28,36 +30,45 @@ class ConnectionSpace {
     initializeRandomConnections(order) {
         var _connections = [];
 
-        for (node in nodes) {
-            if (Math.random() > Math.random()) {
-                _connections.concat(connect(node, order));
+        for (let node of nodes) {
+            if (Math.random() > Math.random() - Math.random()) {
+                _connections.concat(randomConnect(node, order));
             }
         }
 
         this.connections[order] = _connections;
     }
 
-    connect(node, order) {
+    randomConnect(node, order) {
         const nextNode = nodes[Math.floor(Math.random() * this.nodes.length)];
 
         if (order > 1) {
-            return [Connection(node, nextNode)].concat(connect(nextNode, order--));
+            return [new Connection(node, nextNode)].concat(randomConnect(nextNode, order--));
         } else {
-            return [Connection(node, nextNode)];
+            return [new Connection(node, nextNode)];
         }
     }
 }
 
 class Node {
     data;
+    connections = [];
 
     constructor(_data) {
         this.data = _data;
+    }
+
+    connect(connection, order) {
+        this.connections[order].push(connection);
     }
 }
 
 class Connection {
     nodes = [];
 
-    constructor()
+    constructor() {
+        for (argument of arguments) {
+            this.nodes.push(argument);
+        }
+    }
 }
