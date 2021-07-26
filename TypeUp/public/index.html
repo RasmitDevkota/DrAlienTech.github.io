@@ -1,12 +1,44 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TypeUp</title>
-  </head>
 
-  <body>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>TypeUp</title>
 
-  </body>
+	<script src='https://www.gstatic.com/firebasejs/8.6.8/firebase.js'></script>
+
+	<script>
+		firebase.initializeApp({
+			apiKey: "AIzaSyBVT22t-x2H76119AHG8SgPU0_A0U-N1uA",
+			authDomain: "my-scrap-project.firebaseapp.com",
+			databaseURL: "https://my-scrap-project.firebaseio.com",
+			projectId: "my-scrap-project",
+			storageBucket: "my-scrap-project.appspot.com",
+			messagingSenderId: "334998588870",
+			appId: "1:334998588870:web:fd80d1fe0d8237ccc536c7",
+			measurementId: "G-S35B290G0V"
+		});
+
+		firebase.analytics();
+
+		var storage = firebase.storage();
+		var files = storage.ref().child("TypeUp");
+
+		function createFile(path) {
+			files.put(file).then((snapshot) => {
+				console.log('Uploaded a blob or file!');
+			});
+		}
+
+		function loadFile(path) {
+
+		}
+	</script>
+</head>
+
+<body>
+
+</body>
+
 </html>

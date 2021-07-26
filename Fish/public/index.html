@@ -40,22 +40,41 @@
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
-			margin-top: 20%;
+			margin-top: 17%;
 		}
 
 		.homeDivButtonGroup {
 			display: flex;
-			flex-direction: row;
-			justify-content: center;
+			flex-direction: column;
+			justify-content: space-evenly;
 		}
 
 		#startButton {
 			position: relative;
+			background-color: #00e1ff54;
+			font-size: 80px;
+			border-color: rgb(31, 31, 31);
+			color: rgb(29, 29, 29);
+		}
+
+		#leaderboardButton {
+			margin-top: 1vh;
 			width: fit-content;
 			background-color: #00e1ff54;
 			font-size: 80px;
 			border-color: rgb(31, 31, 31);
 			color: rgb(29, 29, 29);
+		}
+
+		#leaderboardDiv {
+			display: flex;
+			justify-content: center;
+			position: absolute;
+			z-index: 2;
+			width: 60vw;
+			height: 80vh;
+			margin: 10vh 20vw;
+			background: #00a2ff;
 		}
 
 		#gameDiv {
@@ -91,16 +110,21 @@
 
   <body>
     <div id="homeDiv">
+		<div id="leaderboardDiv">
+			<h3>Leaderboard</h3>
+		</div>
+
       <div id="homeDivSub">
         <div class="homeDivButtonGroup">
           <button id="startButton" onclick="start()">Start</button>
+
+		  <button id="leaderboardButton" onclick="show('leaderboard')">Leaderboard</button>
 		</div>
-		
 	  </div>
-	  
+
 	  <img class="background" src="home-background.png">
     </div>
-  
+
       <div id="gameDiv">
         <div id="score">
 			<p id="healthNumber">Health: 100</p>
