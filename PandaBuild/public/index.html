@@ -6,6 +6,7 @@
 
 		<script src="script.js"></script>
 		<link rel="stylesheet" href="main.css">
+		<link rel="stylesheet" href="index.css">
 	</head>
 
 	<body>
@@ -27,7 +28,7 @@
 
 				<div>
 					<input id="usernameCreate" class="menu-input" type="text" name="Username" maxlength="12" placeholder="Username">
-					<button id="createRoom" class="menu-button" onclick="window.location='game.html'">Create</button>
+					<button id="createRoom" class="menu-button" onclick="createGame()">Create</button>
 				</div>
 			</div>
 
@@ -39,7 +40,7 @@
 				<div>
 					<input id="usernameJoin" class="menu-input" type="text" name="Username" maxlength="12" placeholder="Username">
 					<input id="code" class="menu-input" type="text" name="Room Code" maxlength="8" placeholder="Game Code">
-					<button id="joinRoom" class="menu-button" onclick="window.location='game.html'">Join</button>
+					<button id="joinRoom" class="menu-button" onclick="findGame()">Join</button>
 				</div>
 			</div>
 		</div>

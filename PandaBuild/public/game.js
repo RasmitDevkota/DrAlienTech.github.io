@@ -21,11 +21,12 @@ context.fillStyle = "#0058bc";
 context.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
 
 function loadDrawingUI() {
-    // document.getElementById("building").style.display = "none";
+    document.getElementById("building").style.display = "none";
+    document.getElementById("saveBuild").style.display = "none";
 
-    // document.getElementById("saveBlueprint").addEventListener("click", () => {
-    //     saveBlueprint();
-    // });
+    document.getElementById("saveBlueprint").addEventListener("click", () => {
+        saveBlueprint();
+    });
 }
 
 function addClick(x, y, dragging) {
@@ -83,9 +84,13 @@ $("#drawCanvas").mouseup(function (e) {
 });
 
 function saveBlueprint() {
+    const blueprintName = new Date().getTime();
+
     drawCanvas.toBlob((blob) => {
-        blueprints.child(`${new Date().getTime()}.png`).put(blob).then((snapshot) => {
+        blueprints.child(`${blueprintName}.png`).put(blob).then((_) => {
             console.log("Saved blueprint!");
+
+            send(`saveblueprint-build ${roomId} ${clientId} ${blueprintName}`);
         });
     });
 }
@@ -117,11 +122,12 @@ var cubeMaterial;
 var isShiftDown;
 
 function loadBuildingUI() {
-    // document.getElementById("drawing").style.display = "none";
+    document.getElementById("drawing").style.display = "none";
+    document.getElementById("saveBlueprint").style.display = "none";
 
-    // document.getElementById("saveBuild").addEventListener("click", () => {
-    //     saveBuild();
-    // });
+    document.getElementById("saveBuild").addEventListener("click", () => {
+        saveBuild();
+    });
 
     init();
     render();
@@ -255,12 +261,16 @@ document.addEventListener('keyup', (event) => {
 });
 
 function saveBuild() {
-    builds.child(`${new Date().getTime()}.json`).put(new Blob([JSON.stringify(scene.toJSON())], { type: "application/json" })).then((snapshot) => {
+    const buildName = new Date().getTime();
+
+    builds.child(`${buildName}.json`).put(new Blob([JSON.stringify(scene.toJSON())], { type: "application/json" })).then((_) => {
         console.log("Saved build!");
+
+        send(`savebuild-build ${roomId} ${clientId} ${buildName}`);
     });
 }
 
 // Main
 
-loadDrawingUI();
-loadBuildingUI();
+// loadDrawingUI();
+// loadBuildingUI();

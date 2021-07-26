@@ -10,6 +10,7 @@
         <script src="script.js"></script>
         <script src="game.js" type="module"></script>
         <link rel="stylesheet" href="main.css">
+        <link rel="stylesheet" href="game.css">
 
         <style>
             #game {
@@ -36,13 +37,13 @@
         <div id="game">
             <div id="drawing">
                 <canvas id="drawCanvas" width="500px" height="500px"></canvas>
-
-                <!-- <button id="saveBlueprint">Save Blueprint</button> -->
             </div>
 
-            <div id="building" oncontextmenu="">
-                <!-- <button id="saveBuild">Save Build</button> -->
-            </div>
+            <button id="saveBlueprint">Save Blueprint</button>
+
+            <div id="building" oncontextmenu=""></div>
+
+            <button id="saveBuild">Save Build</button>
         </div>
     </body>
 </html>

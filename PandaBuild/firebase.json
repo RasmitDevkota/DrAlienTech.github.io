@@ -7,6 +7,7 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
+    "site": "pandabuild",
     "public": "public",
     "ignore": [
       "firebase.json",
