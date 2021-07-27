@@ -49,13 +49,13 @@ function init() {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(width, height);
 
-    renderer.domElement.id = "buildResult";
+    renderer.domElement.id = "referenceCanvas";
 
     renderer.domElement.style.width = width;
     renderer.domElement.style.height = height;
     renderer.domElement.style.marginTop = marginTop;
 
-    document.getElementById("buildingResults").appendChild(renderer.domElement);
+    document.getElementById("referenceBuild").appendChild(renderer.domElement);
 
     controls = new OrbitControls(camera, renderer.domElement);
 
@@ -88,7 +88,7 @@ window.addEventListener('resize', () => {
     }
 });
 
-window.loadScene = (data) => {
+window.loadSceneReference = (data) => {
     var loader = new THREE.ObjectLoader();
     var object = loader.parse(data);
 

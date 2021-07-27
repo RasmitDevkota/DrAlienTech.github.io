@@ -71,6 +71,10 @@ function send(message) {
 function createGame() {
     clientId = document.getElementById("usernameCreate").value;
 
+    if (clientId.length == 0) {
+        return alert("Please enter a username!");
+    }
+
     if (clientId.includes(" ")) {
         return alert("Sorry, username cannot contain spaces!");
     }
@@ -97,8 +101,16 @@ function createGame() {
 }
 
 function findGame() {
-    roomId = document.getElementById("code").value.toLowerCase();
     clientId = document.getElementById("usernameJoin").value;
+    roomId = document.getElementById("code").value.toLowerCase();
+
+    if (clientId.length == 0) {
+        return alert("Please enter a username!");
+    }
+
+    if (roomId.length == 0) {
+        return alert("Please enter a game code!");
+    }
 
     if (clientId.includes(" ")) {
         return alert("Sorry, username cannot contain spaces!");
@@ -153,7 +165,7 @@ function joinGame() {
                         if (options[0] == "start-build") {
                             console.log("Starting game!");
 
-                            loadDrawingUI(options[1]);
+                            loadDrawingUI(options[1] || "1627400415237");
 
                             socket.removeEventListener("message", blueprintReady);
                         }
@@ -207,26 +219,18 @@ function loadResults() {
             var build = options[3];
 
             builds.child(`${reference}.json`).getDownloadURL().then((url) => {
-                fetch(urlC).then(res => res.json()).then(data => {
-                    var loader = new THREE.ObjectLoader();
-                    var object = loader.parse(data);
-
-                    console.log(object);
-
-                    // scene.add(object);
+                fetch(url).then(res => res.json()).then(data => {
+                    loadSceneReference(data);
                 });
             });
 
             blueprints.child(`${blueprint}.png`).getDownloadURL().then((url) => {
-                document.getElementById("drawResults").src = url;
+                document.getElementById("drawResult").src = url;
             });
 
             builds.child(`${build}.json`).getDownloadURL().then((url) => {
-                fetch(urlC).then(res => res.json()).then(data => {
-                    var loader = new THREE.ObjectLoader();
-                    var object = loader.parse(data);
-
-                    scene.add(object);
+                fetch(url).then(res => res.json()).then(data => {
+                    loadScene(data);
                 });
             });
 

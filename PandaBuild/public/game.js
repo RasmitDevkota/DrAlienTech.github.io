@@ -10,6 +10,7 @@ window.loadWaitingUI = (text) => {
     document.getElementById("saveBlueprint").style.display = "none";
     document.getElementById("building").style.display = "none";
     document.getElementById("saveBuild").style.display = "none";
+    document.getElementById("reference").style.display = "none";
 
     document.getElementById("waitingCard").innerHTML = text;
     document.getElementById("waitingCard").style.display = "";
@@ -38,12 +39,53 @@ var clickDrag = new Array();
 
 var paint;
 
-window.loadDrawingUI = () => {
-    document.getElementById("building").style.display = "none";
-    document.getElementById("saveBuild").style.display = "none";
+window.loadDrawingUI = (referenceName) => {
+    document.getElementById("waitingCard").style.display = "none";
+
+    document.getElementById("drawing").style.display = "";
+    document.getElementById("saveBlueprint").style.display = "";
 
     document.getElementById("saveBlueprint").addEventListener("click", () => {
         saveBlueprint();
+    });
+
+    document.getElementById("reference").style.display = "";
+
+    init("referenceCanvas", "reference");
+    render();
+    animate();
+
+    builds.child(`${referenceName}.json`).getDownloadURL().then((url) => {
+        fetch(url).then(res => res.json()).then(data => {
+            var loader = new THREE.ObjectLoader();
+            var object = loader.parse(data);
+
+            console.log(object);
+
+            console.log("owo");
+
+            scene.add(object);
+        });
+    });
+
+    $("#drawCanvas").mousemove(function (e) {
+        if (paint) {
+            addClick(e.offsetX, e.offsetY, true);
+
+            redraw();
+        }
+    });
+
+    $("#drawCanvas").mousedown(function (e) {
+        paint = true;
+
+        addClick(e.offsetX, e.offsetY);
+
+        redraw();
+    });
+
+    $("#drawCanvas").mouseup(function (e) {
+        paint = false;
     });
 };
 
@@ -81,26 +123,6 @@ function redraw(brush = {
     }
 }
 
-$("#drawCanvas").mousemove(function (e) {
-    if (paint) {
-        addClick(e.offsetX - this.offsetLeft + parseFloat(this.style.marginLeft || 0), e.offsetY - this.offsetTop + parseFloat(this.style.marginTop || 0), true);
-
-        redraw();
-    }
-});
-
-$("#drawCanvas").mousedown(function (e) {
-    paint = true;
-
-    addClick(e.offsetX - this.offsetLeft + parseFloat(this.style.marginLeft || 0), e.offsetY - this.offsetTop + parseFloat(this.style.marginTop || 0));
-
-    redraw();
-});
-
-$("#drawCanvas").mouseup(function (e) {
-    paint = false;
-});
-
 function saveBlueprint() {
     const blueprintName = new Date().getTime();
 
@@ -108,7 +130,7 @@ function saveBlueprint() {
         blueprints.child(`${blueprintName}.png`).put(blob).then((_) => {
             console.log("Saved blueprint!");
 
-            send(`message-build submit-blueprint ${roomId} ${clientId} ${blueprintName}`);
+            send(`message-build ${roomId} ${clientId} submit-blueprint ${blueprintName}`);
 
             loadWaitingUI("Great! Now wait for the builder to recreate the reference object using your blueprint!");
         });
@@ -142,14 +164,16 @@ var cubeMaterial;
 var isShiftDown;
 
 window.loadBuildingUI = (blueprintName) => {
-    document.getElementById("drawing").style.display = "none";
-    document.getElementById("saveBlueprint").style.display = "none";
+    document.getElementById("waitingCard").style.display = "none";
 
     document.getElementById("building").style.display = "";
+    document.getElementById("saveBuild").style.display = "";
+
+    document.getElementById("reference").style.display = "";
 
     blueprints.child(`${blueprintName}.png`).getDownloadURL().then((url) => {
         document.getElementById("reference").innerHTML = `
-            <img id="referenceImage"></canvas>
+            <img id="referenceImage" src="${url}">
         `;
     });
 
@@ -157,12 +181,65 @@ window.loadBuildingUI = (blueprintName) => {
     render();
     animate();
 
+    document.addEventListener('pointerdown', (event) => {
+        if (initialized) {
+            if (event.clientX > buildCanvas.offsetLeft && event.clientY > buildCanvas.offsetTop) {
+                pointer.set((event.offsetX / width) * 2 - 1, - (event.offsetY / height) * 2 + 1);
+
+                raycaster.setFromCamera(pointer, camera);
+
+                var intersects = raycaster.intersectObjects(objects);
+
+                if (intersects.length > 0) {
+                    const intersect = intersects[0];
+
+                    if (isShiftDown) {
+                        if (intersect.object !== plane) {
+                            scene.remove(intersect.object);
+
+                            objects.splice(objects.indexOf(intersect.object), 1);
+                        }
+                    } else {
+                        var voxel = new THREE.Mesh(cubeGeo, cubeMaterial);
+
+                        voxel.position.copy(intersect.point).add(intersect.face.normal);
+                        voxel.position.divideScalar(cubeSize).floor().multiplyScalar(cubeSize).addScalar(cubeSize / 2);
+
+                        scene.add(voxel);
+
+                        objects.push(voxel);
+                    }
+
+                    render();
+                }
+            }
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        switch (event.keyCode) {
+            case 16:
+                isShiftDown = true;
+
+                break;
+        }
+    });
+
+    document.addEventListener('keyup', (event) => {
+        switch (event.keyCode) {
+            case 16:
+                isShiftDown = false;
+
+                break;
+        }
+    });
+
     document.getElementById("saveBuild").addEventListener("click", () => {
         saveBuild();
     });
 }
 
-function init() {
+function init(rendererId = "buildCanvas", parentDiv = "building") {
     scene = new THREE.Scene();
 
     camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
@@ -194,15 +271,15 @@ function init() {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(width, height);
 
-    renderer.domElement.id = "buildCanvas";
+    renderer.domElement.id = rendererId;
 
     renderer.domElement.style.width = width;
     renderer.domElement.style.height = height;
     renderer.domElement.style.marginTop = marginTop;
 
-    document.getElementById("building").appendChild(renderer.domElement);
+    document.getElementById(parentDiv).appendChild(renderer.domElement);
 
-    buildCanvas = document.getElementById("buildCanvas");
+    buildCanvas = document.getElementById(rendererId);
 
     controls = new OrbitControls(camera, renderer.domElement);
 
@@ -235,66 +312,13 @@ window.addEventListener('resize', () => {
     }
 });
 
-document.addEventListener('pointerdown', (event) => {
-    if (initialized) {
-        if (event.clientX > buildCanvas.offsetLeft && event.clientY > buildCanvas.offsetTop) {
-            pointer.set((event.offsetX / width) * 2 - 1, - (event.offsetY / height) * 2 + 1);
-
-            raycaster.setFromCamera(pointer, camera);
-
-            var intersects = raycaster.intersectObjects(objects);
-
-            if (intersects.length > 0) {
-                const intersect = intersects[0];
-
-                if (isShiftDown) {
-                    if (intersect.object !== plane) {
-                        scene.remove(intersect.object);
-
-                        objects.splice(objects.indexOf(intersect.object), 1);
-                    }
-                } else {
-                    var voxel = new THREE.Mesh(cubeGeo, cubeMaterial);
-
-                    voxel.position.copy(intersect.point).add(intersect.face.normal);
-                    voxel.position.divideScalar(cubeSize).floor().multiplyScalar(cubeSize).addScalar(cubeSize / 2);
-
-                    scene.add(voxel);
-
-                    objects.push(voxel);
-                }
-
-                render();
-            }
-        }
-    }
-});
-
-document.addEventListener('keydown', (event) => {
-    switch (event.keyCode) {
-        case 16:
-            isShiftDown = true;
-
-            break;
-    }
-});
-
-document.addEventListener('keyup', (event) => {
-    switch (event.keyCode) {
-        case 16:
-            isShiftDown = false;
-
-            break;
-    }
-});
-
 function saveBuild() {
     const buildName = new Date().getTime();
 
     builds.child(`${buildName}.json`).put(new Blob([JSON.stringify(scene.toJSON())], { type: "application/json" })).then((_) => {
         console.log("Saved build!");
 
-        send(`message-build submit-build ${roomId} ${clientId} ${buildName}`);
+        send(`message-build ${roomId} ${clientId} submit-build ${buildName}`);
     });
 }
 
@@ -313,5 +337,3 @@ socket.addEventListener("message", function finishCallback(event) {
         }
     }
 });
-
-loadBuildingUI();

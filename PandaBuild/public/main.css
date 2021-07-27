@@ -12,6 +12,10 @@
     font-family: 'Quicksand', sans-serif;
 }
 
+body {
+    margin: 0px;
+}
+
 button:hover {
     cursor: pointer;
 }
