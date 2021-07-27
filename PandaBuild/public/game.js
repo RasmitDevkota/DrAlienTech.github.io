@@ -6,7 +6,13 @@ import { OrbitControls } from './OrbitControls.js';
 // Waiting
 
 window.loadWaitingUI = (text) => {
-    console.log(text);
+    document.getElementById("drawing").style.display = "none";
+    document.getElementById("saveBlueprint").style.display = "none";
+    document.getElementById("building").style.display = "none";
+    document.getElementById("saveBuild").style.display = "none";
+
+    document.getElementById("waitingCard").innerHTML = text;
+    document.getElementById("waitingCard").style.display = "";
 }
 
 // Drawing
@@ -143,7 +149,7 @@ window.loadBuildingUI = (blueprintName) => {
 
     blueprints.child(`${blueprintName}.png`).getDownloadURL().then((url) => {
         document.getElementById("reference").innerHTML = `
-            <canvas id="referenceCanvas" width="500px" height="500px"></canvas>
+            <img id="referenceImage"></canvas>
         `;
     });
 
@@ -293,16 +299,6 @@ function saveBuild() {
 }
 
 // Networking
-
-socket.addEventListener("message", function blueprintReady1(event) {
-    var options = event.data.split(" ");
-
-    if (options[0] == "start-build") {
-        console.log("sanskwiti didi");
-
-        socket.removeEventListener("message", blueprintReady1);
-    }
-});
 
 socket.addEventListener("message", function finishCallback(event) {
     const options = event.data.split(" ");

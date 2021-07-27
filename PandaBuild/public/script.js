@@ -97,7 +97,7 @@ function createGame() {
 }
 
 function findGame() {
-    roomId = document.getElementById("code").value;
+    roomId = document.getElementById("code").value.toLowerCase();
     clientId = document.getElementById("usernameJoin").value;
 
     if (clientId.includes(" ")) {
@@ -159,7 +159,7 @@ function joinGame() {
                         }
                     });
 
-                    loadWaitingUI("Waiting on another player to join! Invite a friend using the code " + roomId);
+                    loadWaitingUI(`Waiting on another player to join! Invite a friend using the code ${roomId}`);
                 } else {
                     socket.addEventListener("message", function buildReady(event) {
                         var options = event.data.split(" ");

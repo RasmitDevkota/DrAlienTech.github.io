@@ -7,6 +7,24 @@ body {
     flex-direction: row;
 }
 
+#waitingCard {
+    width: 50vw;
+    height: 50vh;
+    margin-top: 25vh;
+    margin-left: 25vw;
+    z-index: 1;
+    position: absolute;
+    font-size: 3vw;
+    text-align: center;
+    vertical-align: middle;
+    color: white;
+}
+
+#referenceImage {
+    border: 3px solid black;
+    background: var(--blueprint);
+}
+
 canvas:focus {
     outline: none;
 }
