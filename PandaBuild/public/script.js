@@ -9,13 +9,6 @@ firebase.initializeApp({
     measurementId: "G-S35B290G0V"
 });
 
-firebase.analytics();
-
-const db = firebase.firestore();
-db.enablePersistence();
-
-const users = db.collection("users");
-
 const storage = firebase.storage().ref();
 
 const blueprints = storage.child("PandaBuild/blueprints");
@@ -23,6 +16,7 @@ const builds = storage.child("PandaBuild/builds");
 
 // Networking
 
+var hostId = "";
 var clientId = "";
 var roomId = "";
 
@@ -38,6 +32,13 @@ socket.addEventListener("open", (event) => {
         roomId = urlParams.get('roomId');
 
         joinGame();
+    } else if (window.location.toString().includes("results.html")) {
+        var urlParams = new URLSearchParams(decodeURIComponent(window.location.search));
+
+        clientId = urlParams.get('clientId');
+        roomId = urlParams.get('roomId');
+
+        loadResults();
     }
 });
 
@@ -77,7 +78,7 @@ function createGame() {
     send(`create-build ${clientId}`);
 
     socket.addEventListener("message", function createCallback(event) {
-        const options = event.data.split(" ");
+        var options = event.data.split(" ");
 
         if (options[0] == "create-build") {
             if (options[1] == "success") {
@@ -106,7 +107,7 @@ function findGame() {
     send(`find-build ${roomId}`);
 
     socket.addEventListener("message", function findCallback(event) {
-        const options = event.data.split(" ");
+        var options = event.data.split(" ");
 
         if (options[0] == "find-build") {
             if (options[1] == "success") {
@@ -139,13 +140,39 @@ function joinGame() {
     send(`join-build ${roomId} ${clientId}`);
 
     socket.addEventListener("message", function joinCallback(event) {
-        const options = event.data.split(" ");
+        var options = event.data.split(" ");
 
         if (options[0] == "join-build") {
             if (options[1] == "success") {
                 console.log("Successfully joined game!");
 
-                // Stuff!
+                if (options[2] == clientId) {
+                    socket.addEventListener("message", function blueprintReady(event) {
+                        var options = event.data.split(" ");
+
+                        if (options[0] == "start-build") {
+                            console.log("Starting game!");
+
+                            loadDrawingUI(options[1]);
+
+                            socket.removeEventListener("message", blueprintReady);
+                        }
+                    });
+
+                    loadWaitingUI("Waiting on another player to join! Invite a friend using the code " + roomId);
+                } else {
+                    socket.addEventListener("message", function buildReady(event) {
+                        var options = event.data.split(" ");
+
+                        if (options[0] == "submit-blueprint") {
+                            loadBuildingUI(options[1]);
+
+                            socket.removeEventListener("message", buildReady);
+                        }
+                    });
+
+                    loadWaitingUI("The artist is currently making a blueprint of the reference object. Wait for them to finish, then you will use their blueprint to recreate the reference object!");
+                }
             } else if (options[1] == "error") {
                 switch (options[2]) {
                     case "not-found":
@@ -164,6 +191,46 @@ function joinGame() {
             }
 
             socket.removeEventListener("message", joinCallback);
+        }
+    });
+}
+
+function loadResults() {
+    send(`results-build ${roomId} ${clientId}`);
+
+    socket.addEventListener("message", function resultsCallback(event) {
+        var options = event.data.split(" ");
+
+        if (options[0] == "results-build") {
+            var reference = options[1];
+            var blueprint = options[2];
+            var build = options[3];
+
+            builds.child(`${reference}.json`).getDownloadURL().then((url) => {
+                fetch(urlC).then(res => res.json()).then(data => {
+                    var loader = new THREE.ObjectLoader();
+                    var object = loader.parse(data);
+
+                    console.log(object);
+
+                    // scene.add(object);
+                });
+            });
+
+            blueprints.child(`${blueprint}.png`).getDownloadURL().then((url) => {
+                document.getElementById("drawResults").src = url;
+            });
+
+            builds.child(`${build}.json`).getDownloadURL().then((url) => {
+                fetch(urlC).then(res => res.json()).then(data => {
+                    var loader = new THREE.ObjectLoader();
+                    var object = loader.parse(data);
+
+                    scene.add(object);
+                });
+            });
+
+            socket.removeEventListener("message", resultsCallback);
         }
     });
 }

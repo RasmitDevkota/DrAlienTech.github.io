@@ -7,34 +7,20 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"
             integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
+        <script src="OrbitControls.js" type="module"></script>
+
         <script src="script.js"></script>
         <script src="game.js" type="module"></script>
         <link rel="stylesheet" href="main.css">
         <link rel="stylesheet" href="game.css">
-
-        <style>
-            #game {
-                display: flex;
-                flex-direction: row;
-            }
-
-            canvas:focus {
-                outline: none;
-            }
-
-            #drawCanvas {
-                border: 3px solid black;
-                background: var(--blueprint);
-            }
-
-            #buildCanvas {
-                border: 3px solid black;
-            }
-        </style>
     </head>
 
     <body>
         <div id="game">
+            <div id="reference">
+
+            </div>
+
             <div id="drawing">
                 <canvas id="drawCanvas" width="500px" height="500px"></canvas>
             </div>

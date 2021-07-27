@@ -1,3 +1,21 @@
 body {
     background: var(--dark-bamboo);
 }
+
+#game {
+    display: flex;
+    flex-direction: row;
+}
+
+canvas:focus {
+    outline: none;
+}
+
+#drawCanvas {
+    border: 3px solid black;
+    background: var(--blueprint);
+}
+
+#buildCanvas {
+    border: 3px solid black;
+}

@@ -1,15 +1,30 @@
 // Imports
+
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.121.1/build/three.module.js';
-import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.121.1/examples/jsm/controls/OrbitControls.js';
+import { OrbitControls } from './OrbitControls.js';
+
+// Waiting
+
+window.loadWaitingUI = (text) => {
+    console.log(text);
+}
 
 // Drawing
 
-const drawCanvas = document.getElementById("drawCanvas");
-const context = drawCanvas.getContext("2d");
+var drawCanvas;
+var context;
 
-drawCanvas.width = window.innerWidth * 0.45;
-drawCanvas.height = window.innerHeight * 0.8;
-drawCanvas.style.marginTop = window.innerHeight * 0.1;
+if (window.location.toString().includes("game.html")) {
+    drawCanvas = document.getElementById("drawCanvas");
+    context = drawCanvas.getContext("2d");
+
+    drawCanvas.width = window.innerWidth * 0.45;
+    drawCanvas.height = window.innerHeight * 0.8;
+    drawCanvas.style.marginTop = window.innerHeight * 0.1;
+
+    context.fillStyle = "#0058bc";
+    context.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
+}
 
 var clickX = new Array();
 var clickY = new Array();
@@ -17,17 +32,14 @@ var clickDrag = new Array();
 
 var paint;
 
-context.fillStyle = "#0058bc";
-context.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
-
-function loadDrawingUI() {
+window.loadDrawingUI = () => {
     document.getElementById("building").style.display = "none";
     document.getElementById("saveBuild").style.display = "none";
 
     document.getElementById("saveBlueprint").addEventListener("click", () => {
         saveBlueprint();
     });
-}
+};
 
 function addClick(x, y, dragging) {
     clickX.push(x);
@@ -90,7 +102,9 @@ function saveBlueprint() {
         blueprints.child(`${blueprintName}.png`).put(blob).then((_) => {
             console.log("Saved blueprint!");
 
-            send(`saveblueprint-build ${roomId} ${clientId} ${blueprintName}`);
+            send(`message-build submit-blueprint ${roomId} ${clientId} ${blueprintName}`);
+
+            loadWaitingUI("Great! Now wait for the builder to recreate the reference object using your blueprint!");
         });
     });
 }
@@ -121,17 +135,25 @@ var cubeMaterial;
 
 var isShiftDown;
 
-function loadBuildingUI() {
+window.loadBuildingUI = (blueprintName) => {
     document.getElementById("drawing").style.display = "none";
     document.getElementById("saveBlueprint").style.display = "none";
 
-    document.getElementById("saveBuild").addEventListener("click", () => {
-        saveBuild();
+    document.getElementById("building").style.display = "";
+
+    blueprints.child(`${blueprintName}.png`).getDownloadURL().then((url) => {
+        document.getElementById("reference").innerHTML = `
+            <canvas id="referenceCanvas" width="500px" height="500px"></canvas>
+        `;
     });
 
     init();
     render();
     animate();
+
+    document.getElementById("saveBuild").addEventListener("click", () => {
+        saveBuild();
+    });
 }
 
 function init() {
@@ -266,11 +288,34 @@ function saveBuild() {
     builds.child(`${buildName}.json`).put(new Blob([JSON.stringify(scene.toJSON())], { type: "application/json" })).then((_) => {
         console.log("Saved build!");
 
-        send(`savebuild-build ${roomId} ${clientId} ${buildName}`);
+        send(`message-build submit-build ${roomId} ${clientId} ${buildName}`);
     });
 }
 
-// Main
+// Networking
 
-// loadDrawingUI();
-// loadBuildingUI();
+socket.addEventListener("message", function blueprintReady1(event) {
+    var options = event.data.split(" ");
+
+    if (options[0] == "start-build") {
+        console.log("sanskwiti didi");
+
+        socket.removeEventListener("message", blueprintReady1);
+    }
+});
+
+socket.addEventListener("message", function finishCallback(event) {
+    const options = event.data.split(" ");
+
+    if (options[0] == "message-build") {
+        if (options[1] == "game-over") {
+            socket.close(1000, `redirect-build ${roomId} ${clientId}`);
+
+            window.location.href = `results.html?clientId=${clientId}&roomId=${roomId}`;
+
+            socket.removeEventListener("message", finishCallback);
+        }
+    }
+});
+
+loadBuildingUI();
