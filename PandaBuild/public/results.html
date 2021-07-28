@@ -19,18 +19,32 @@
 
 <body>
     <div id="results">
-        <div>
-            <div id="referenceBuild" oncontextmenu=""></div>
+        <div class="results-row">
+            <h1 id="title">Results</h1>
         </div>
 
-        <br>
+        <div class="results-row">
+            <div>
+                <h1 class="result-title">Reference Build</h1>
 
-        <div>
-            <div id="drawingResults">
-                <img id="drawResult">
+                <div id="referenceBuild" oncontextmenu=""></div>
+            </div>
+        </div>
+
+        <div class="results-row">
+            <div>
+                <h1 class="result-title">Blueprint</h1>
+
+                <div id="drawingResults">
+                    <img id="drawResult">
+                </div>
             </div>
 
-            <div id="buildingResults" oncontextmenu=""></div>
+            <div>
+                <h1 class="result-title">Recreation</h1>
+
+                <div id="buildingResults" oncontextmenu=""></div>
+            </div>
         </div>
     </div>
 </body>

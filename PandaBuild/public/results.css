@@ -6,16 +6,39 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding: 1vh 0vw;
 }
 
-#results > div {
+.results-row {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    margin: 0.2vw 1vw 0.5vw 0vw;
+}
+
+.results-row > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.result-title {
+    text-align: center;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
 }
 
 canvas:focus {
     outline: none;
+}
+
+#title {
+    width: 50vw;
+    margin: 0px !important;
+    font-size: 5vw;
+    text-align: center;
+    border: 3px solid var(--grass);
+    background-color: var(--bamboo);
 }
 
 #referenceCanvas {

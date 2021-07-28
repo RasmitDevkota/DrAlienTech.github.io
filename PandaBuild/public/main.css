@@ -19,3 +19,7 @@ body {
 button:hover {
     cursor: pointer;
 }
+
+::-webkit-scrollbar {
+  width: 0px;
+}
