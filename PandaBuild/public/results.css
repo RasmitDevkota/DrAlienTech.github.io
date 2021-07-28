@@ -1,5 +1,5 @@
 body {
-    background: var(--dark-bamboo);
+    background: var(--bamboo);
 }
 
 #results {
@@ -23,9 +23,14 @@ body {
 }
 
 .result-title {
-    text-align: center;
     margin-top: 1vh;
-    margin-bottom: 1vh;
+    margin-bottom: 0vh !important;
+    font-size: 2vw;
+    text-align: center;
+    border-top: 3px solid black;
+    border-left: 3px solid black;
+    border-right: 3px solid black;
+    background-color: var(--bamboo);
 }
 
 canvas:focus {
@@ -38,7 +43,7 @@ canvas:focus {
     font-size: 5vw;
     text-align: center;
     border: 3px solid var(--grass);
-    background-color: var(--bamboo);
+    background-color: var(--dark-bamboo);
 }
 
 #referenceCanvas {
@@ -60,4 +65,19 @@ canvas:focus {
 #buildResult {
     border: 3px solid black;
     margin: 0% !important;
+}
+
+#homeButton {
+    width: 20vw;
+    height: 120%;
+    margin: 2vh 0vw 0vw 1vh;
+    font-size: xx-large;
+    font-weight: bold;
+    text-align: center;
+    border: 3px solid black;
+    background-color: var(--bamboo);
+}
+
+#homeButton:hover {
+    background-color: var(--dark-bamboo);
 }
