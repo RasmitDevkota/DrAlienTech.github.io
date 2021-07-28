@@ -6,6 +6,8 @@ import { OrbitControls } from './OrbitControls.js';
 // Waiting
 
 window.loadWaitingUI = (text) => {
+    document.getElementById("instructions").style.display = "none";
+
     document.getElementById("drawing").style.display = "none";
     document.getElementById("saveBlueprint").style.display = "none";
 
@@ -15,7 +17,7 @@ window.loadWaitingUI = (text) => {
     document.getElementById("reference").style.display = "none";
 
     document.getElementById("waitingCard").innerHTML = text;
-    document.getElementById("waitingCard").style.display = "";
+    document.getElementById("waitingCard").style.display = "flex";
 }
 
 // Drawing
@@ -93,6 +95,11 @@ window.loadDrawingUI = (referenceName) => {
     $("#drawCanvas").mouseup(function (e) {
         paint = false;
     });
+
+    document.getElementById("instructions").style.display = "flex";
+    document.getElementById("instructions").innerHTML = `
+        Use the reference build on the left to draw a blueprint on the right. Click "Save Blueprint" when you're done!
+    `;
 };
 
 function addClick(x, y, dragging) {
@@ -224,6 +231,11 @@ window.loadBuildingUI = (blueprintName) => {
     document.getElementById("saveBuild").addEventListener("click", () => {
         saveBuild();
     });
+
+    document.getElementById("instructions").style.display = "flex";
+    document.getElementById("instructions").innerHTML = `
+        Use the blueprint on the left to recreate the reference object on the right. Click "Save Build" when you're done!
+    `;
 }
 
 function init(rendererId = "buildCanvas", parentDiv = "building") {

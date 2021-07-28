@@ -20,6 +20,7 @@ canvas:focus {
 
 #referenceCanvas {
     border: 3px solid black;
+    margin: 0% !important;
 }
 
 #drawingResults {
@@ -35,4 +36,5 @@ canvas:focus {
 
 #buildResult {
     border: 3px solid black;
+    margin: 0% !important;
 }

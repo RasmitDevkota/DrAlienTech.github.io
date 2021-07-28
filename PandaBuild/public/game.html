@@ -17,21 +17,31 @@
 
     <body>
         <div id="game">
-            <div id="waitingCard"></div>
-
-            <div id="reference">
-
+            <div>
+                <div id="waitingCard" class="game-row"></div>
             </div>
 
-            <div id="drawing">
-                <canvas id="drawCanvas" width="500px" height="500px"></canvas>
+            <div class="game-row">
+                <p id="instructions"></p>
             </div>
 
-            <button id="saveBlueprint">Save Blueprint</button>
+            <div class="game-row">
+                <div id="reference">
 
-            <div id="building" oncontextmenu=""></div>
+                </div>
 
-            <button id="saveBuild">Save Build</button>
+                <div id="drawing">
+                    <canvas id="drawCanvas" width="500px" height="500px"></canvas>
+                </div>
+
+                <div id="building" oncontextmenu=""></div>
+            </div>
+
+            <div class="game-row">
+                <button id="saveBlueprint">Save Blueprint</button>
+
+                <button id="saveBuild">Save Build</button>
+            </div>
         </div>
     </body>
 </html>

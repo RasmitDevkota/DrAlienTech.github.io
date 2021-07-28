@@ -171,7 +171,7 @@ function joinGame() {
                         }
                     });
 
-                    loadWaitingUI(`Waiting on another player to join! Invite a friend using the code ${roomId}`);
+                    loadWaitingUI(`<div>Waiting on another player to join!<br>Invite a friend using the code <b>${roomId}</b></div>`);
                 } else {
                     socket.addEventListener("message", function buildReady(event) {
                         var options = event.data.split(" ");
@@ -183,7 +183,7 @@ function joinGame() {
                         }
                     });
 
-                    loadWaitingUI("The artist is currently making a blueprint of the reference object. Wait for them to finish, then you will use their blueprint to recreate the reference object!");
+                    loadWaitingUI("<div>The artist is currently making a blueprint of the reference object.<br>Wait for them to finish, then you will use their blueprint to recreate the reference object!</div>");
                 }
             } else if (options[1] == "error") {
                 switch (options[2]) {
