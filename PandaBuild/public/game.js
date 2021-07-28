@@ -68,10 +68,6 @@ window.loadDrawingUI = (referenceName) => {
             var loader = new THREE.ObjectLoader();
             var object = loader.parse(data);
 
-            console.log(object);
-
-            console.log("owo");
-
             scene.add(object);
         });
     });
