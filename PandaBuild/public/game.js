@@ -8,8 +8,10 @@ import { OrbitControls } from './OrbitControls.js';
 window.loadWaitingUI = (text) => {
     document.getElementById("drawing").style.display = "none";
     document.getElementById("saveBlueprint").style.display = "none";
+
     document.getElementById("building").style.display = "none";
     document.getElementById("saveBuild").style.display = "none";
+
     document.getElementById("reference").style.display = "none";
 
     document.getElementById("waitingCard").innerHTML = text;
@@ -36,11 +38,15 @@ if (window.location.toString().includes("game.html")) {
 var clickX = new Array();
 var clickY = new Array();
 var clickDrag = new Array();
+var clickColor = new Array();
 
 var paint;
 
 window.loadDrawingUI = (referenceName) => {
     document.getElementById("waitingCard").style.display = "none";
+
+    document.getElementById("building").style.display = "none";
+    document.getElementById("saveBuild").style.display = "none";
 
     document.getElementById("drawing").style.display = "";
     document.getElementById("saveBlueprint").style.display = "";
@@ -94,19 +100,18 @@ function addClick(x, y, dragging) {
     clickY.push(y);
 
     clickDrag.push(dragging);
+
+    clickColor.push(isShiftDown ? "#0058bc" : "#ffffff");
 }
 
-function redraw(brush = {
-    color: "#ffffff",
-    width: 5,
-}) {
-    context.strokeStyle = brush.color;
-
+function redraw() {
     context.lineJoin = "round";
 
-    context.lineWidth = brush.width;
+    context.lineWidth = 5;
 
     for (var i = 0; i < clickX.length; i++) {
+        context.strokeStyle = clickColor[i];
+
         context.beginPath();
 
         if (clickDrag[i] && i) {
@@ -216,24 +221,6 @@ window.loadBuildingUI = (blueprintName) => {
         }
     });
 
-    document.addEventListener('keydown', (event) => {
-        switch (event.keyCode) {
-            case 16:
-                isShiftDown = true;
-
-                break;
-        }
-    });
-
-    document.addEventListener('keyup', (event) => {
-        switch (event.keyCode) {
-            case 16:
-                isShiftDown = false;
-
-                break;
-        }
-    });
-
     document.getElementById("saveBuild").addEventListener("click", () => {
         saveBuild();
     });
@@ -321,6 +308,24 @@ function saveBuild() {
         send(`message-build ${roomId} ${clientId} submit-build ${buildName}`);
     });
 }
+
+document.addEventListener('keydown', (event) => {
+    switch (event.keyCode) {
+        case 16:
+            isShiftDown = true;
+
+            break;
+    }
+});
+
+document.addEventListener('keyup', (event) => {
+    switch (event.keyCode) {
+        case 16:
+            isShiftDown = false;
+
+            break;
+    }
+});
 
 // Networking
 
