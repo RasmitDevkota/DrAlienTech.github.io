@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Kryption</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500&display=swap" rel="stylesheet">
+
+    <script src='https://www.gstatic.com/firebasejs/8.2.1/firebase.js'></script>
+
+    <script src="https://chancejs.com/chance.min.js"></script>
+
+    <script>
+        // Utils
+        function arrrand(arr) {
+            return arr[Math.floor(Math.random() * arr.length)]
+        }
+    </script>
+
+    <style>
+        * {
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: larger;
+            color: white;
+            background-color: black;
+        }
+
+        html {
+            display: flex;
+            justify-content: center;
+            margin-top: 1%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 50%;
+            margin-top: 2%;
+        }
+
+        input,
+        button {
+            border: 2px solid white;
+        }
+
+        button {
+            width: 30%;
+            margin-top: 3%;
+        }
+
+        button:hover {
+            cursor: pointer;
+        }
+
+        #main {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        #questionText {
+            word-wrap: break-word;
+        }
+
+        #timeWrapper {
+            margin-top: 2%;
+        }
+
+        #time {
+            font-size: 80%;
+        }
+
+        #answerBox {
+            margin-top: 2%;
+            width: 60%;
+        }
+
+        #newAffineButtonWrapper {
+            display: flex;
+            justify-content: center;
+        }
+
+        #newAffineButton {
+            font-size: 80%;
+        }
+
+        #settingsButtonWrapper {
+            display: flex;
+            justify-content: center;
+            font-size: 80%;
+        }
+
+        #settings {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: absolute;
+            z-index: 1000;
+            width: 30%;
+            margin-top: 5%;
+            margin-left: 7.5%;
+            margin-right: 7.5%;
+            padding: 2% 2%;
+            background-color: rgb(27, 27, 27);
+            border: 10px solid rgb(68, 68, 68);
+        }
+
+        #settings p,
+        #settings button {
+            font-size: 70%;
+        }
+
+        .settingsField,
+        .settingsValue,
+        #closeSettingsWrapper,
+        #settings>p {
+            background-color: unset;
+        }
+
+        .settingsField {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .settingsValue {
+            text-align: center;
+        }
+
+        .settingsValue>a:hover {
+            cursor: pointer;
+        }
+
+        .settingsInput {
+            margin-top: 2%;
+            width: 50%;
+        }
+
+        #closeSettingsWrapper {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<p style="z-index: 999; margin-top: -5%;">
+		<button onclick="window.location='index.html'">Morse</button>
+
+		<button onclick="window.location='vigenere.html'">Vigenere</button>
+
+		<button onclick="window.location='affine.html'">Affine</button>
+</p>
+
+<body>
+
+    <div id="settings" style="display: none">
+        <div id="charCount" class="settingsField">
+            <p id="charCountValue" class="settingsValue">
+                # of Characters (1-50) <br> <input id="charCountInput" class="settingsInput" type="number" min="1"
+                    max="50" placeholder="Default: 5">
+                <a onclick="resetCharCount();"
+                    style="background-color: unset; font-size: 130%; line-height: 200%; width: 20%; height: fit-content;">Reset</a>
+            </p>
+        </div>
+
+        <p>
+            Note: Changes are saved on your device but it is recommended to refresh the page in order to make sure all
+            changes take place.
+        </p>
+
+        <div id="closeSettingsWrapper">
+            <button id="closeSettings" class="noselect"
+                onclick="document.getElementById('settings').style.display = 'none'">Close</button>
+        </div>
+    </div>
+
+    <div id="main">
+        <div id="questionDisplay">
+            <p id="questionText"></p>
+            <p id="keyText"></p>
+        </div>
+
+        <div id="answerBoxWrapper">
+            <input id="answerBox" placeholder="Type here...">
+        </div>
+
+        <div id="timeWrapper">
+            <p id="time">Encode the plaintext using the given key values!</p>
+        </div>
+
+        <div id="newAffineButtonWrapper">
+            <button id="newAffineButton" class="noselect" onclick="generate()">New Cipher</button>
+        </div>
+
+        <div id="settingsButtonWrapper">
+            <button id="settingsButton" class="noselect" onclick="settings()">Settings</button>
+        </div>
+    </div>
+
+    <script>
+        const questionText = document.getElementById("questionText");
+        const keyText = document.getElementById("keyText");
+        const answerBox = document.getElementById("answerBox");
+        const time = document.getElementById("time");
+        const newAffineButton = document.getElementById("newAffineButton");
+        const settingsButton = document.getElementById("settingsButton");
+
+        const charCountInput = document.getElementById("charCountInput");
+
+        let count = (Number(localStorage.getItem("affineCount"))) ? Number(localStorage.getItem("affineCount")) : 5;
+
+        charCountInput.placeholder = `Current: ${count}`;
+
+        let mode = "e";
+
+        function settings() {
+            document.getElementById("settings").style.display = "flex";
+        }
+
+        charCountInput.oninput = function () {
+            if (this.value > 50) {
+                this.value = 50;
+            }
+
+            if (this.value == 0 || this.value.toString() == "") {
+                localStorage.setItem("affineCount", "5");
+                count = 5;
+                charCountInput.placeholder = `Default: 5`;
+            } else {
+                localStorage.setItem("affineCount", this.value.toString());
+                count = this.value;
+                charCountInput.placeholder = `Current: ${count}`;
+            }
+
+            generate();
+        };
+
+        function resetCharCount() {
+            localStorage.setItem("affineCount", "5");
+            count = 5;
+            charCountInput.placeholder = `Default: 5`;
+            charCountInput.value = ``;
+
+            generate();
+        }
+
+        function generate(number = count) {
+            answerBox.value = "";
+
+            time.innerHTML = "Encode the plaintext using the key values!";
+
+            questionText.style.color = "white";
+            keyText.style.color = "white";
+            answerBox.style.color = "white";
+            time.style.color = "white";
+            newAffineButton.style.color = "white";
+            settingsButton.style.color = "white";
+
+            let plaintext = chance.word({ length: 5 }).toUpperCase();
+
+            let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+            let a = arrrand([1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25]);
+
+            let b = function(a) {
+                switch (a) {
+                    case 1:
+                        return arrrand([3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25]);
+                        break;
+                    case 3:
+                        return arrrand([1, 5, 7, 11, 13, 17, 19, 23, 25]);
+                        break;
+                    case 5:
+                        return arrrand([1, 3, 7, 9, 11, 13, 17, 19, 21, 23]);
+                        break;
+                    case 7:
+                        return arrrand([1, 3, 5, 9, 11, 15, 17, 19, 23, 25]);
+                        break;
+                    case 9:
+                        return arrrand([1, 5, 7, 11, 15, 17, 19, 21, 23, 25]);
+                        break;
+                    case 11:
+                        return arrrand([1, 3, 5, 7, 9, 15, 17, 19, 21, 23, 25]);
+                        break;
+                    case 15:
+                        return arrrand([1, 7, 9, 11, 17, 19, 21, 23]);
+                        break;
+                    case 17:
+                        return arrrand([1, 3, 5, 7, 9, 11, 15, 19, 21, 23, 25]);
+                        break;
+                    case 19:
+                        return arrrand([1, 3, 5, 7, 9, 11, 15, 17, 21, 23, 25]);
+                        break;
+                    case 21:
+                        return arrrand([1, 5, 9, 11, 15, 17, 23, 25]);
+                        break;
+                    case 23:
+                        return arrrand([1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 25]);
+                        break;
+                    case 25:
+                        return arrrand([1, 3, 7, 9, 11, 17, 19, 21, 23]);
+                        break;
+                    default:
+                        console.error("Invalid 'a' value:", a);
+
+                        alert("Error occurred generating affine cipher! Please refresh the page and try again!");
+                }
+            }(a)
+
+            let ciphertext = "";
+
+            for (letter of plaintext) {
+                ciphertext += alphabet[(a * alphabet.indexOf(letter) + b) % 26];
+            }
+
+            if (mode == "e") {
+                questionText.innerHTML = plaintext;
+
+                keyText.innerHTML = `a = ${a}, b = ${b}`;
+            } else {
+                questionText.innerHTML = ciphertext;
+            }
+
+            console.log(plaintext, ciphertext, a, b);
+
+            const startTime = new Date();
+
+            answerBox.oninput = function () {
+                if (mode == "e") {
+                    if (this.value == ciphertext) {
+                        questionText.style.color = "#00FA9A";
+                        keyText.style.color = "#00FA9A";
+                        answerBox.style.color = "#00FA9A";
+                        time.style.color = "#00FA9A";
+                        newAffineButton.style.color = "#00FA9A";
+                        settingsButton.style.color = "#00FA9A";
+
+                        var timeScore = (new Date() - startTime) / 1000;
+                        time.innerHTML = `Correct! You solved it in ${timeScore} seconds!`;
+                    } else if (!ciphertext.includes(this.value)) {
+                        questionText.style.color = "#FF6347";
+                        keyText.style.color = "#FF6347";
+                        answerBox.style.color = "#FF6347";
+                        time.style.color = "#FF6347";
+                        newAffineButton.style.color = "#FF6347";
+                        settingsButton.style.color = "#FF6347";
+
+                        time.innerHTML = `Oops, something's wrong! Check for mistakes!`;
+                    } else {
+                        questionText.style.color = "white";
+                        keyText.style.color = "white";
+                        answerBox.style.color = "white";
+                        time.style.color = "white";
+                        newAffineButton.style.color = "white";
+                        settingsButton.style.color = "white";
+
+                        time.innerHTML = "Encode the plaintext using the key values!";
+                    }
+                } else {
+                    if (this.value == plaintext) {
+                        questionText.style.color = "#00FA9A";
+                        keyText.style.color = "#00FA9A";
+                        answerBox.style.color = "#00FA9A";
+                        time.style.color = "#00FA9A";
+                        newAffineButton.style.color = "#00FA9A";
+                        settingsButton.style.color = "#00FA9A";
+
+                        var timeScore = (new Date() - startTime) / 1000;
+                        time.innerHTML = `Correct! You solved it in ${timeScore} seconds!`;
+                    } else if (!plaintext.includes(this.value)) {
+                        questionText.style.color = "#FF6347";
+                        keyText.style.color = "#FF6347";
+                        answerBox.style.color = "#FF6347";
+                        time.style.color = "#FF6347";
+                        newAffineButton.style.color = "#FF6347";
+                        settingsButton.style.color = "#FF6347";
+
+                        time.innerHTML = `Oops, something's wrong! Check for mistakes!`;
+                    } else {
+                        questionText.style.color = "white";
+                        keyText.style.color = "white";
+                        answerBox.style.color = "white";
+                        time.style.color = "white";
+                        newAffineButton.style.color = "white";
+                        settingsButton.style.color = "white";
+
+                        time.innerHTML = "Decode the ciphertext using the key values!";
+                    }
+                }
+            };
+        }
+
+        document.addEventListener('keydown', function (event) {
+            switch (event.key) {
+                case "Enter":
+                    generate();
+                    break;
+            }
+        });
+
+        generate();
+    </script>
+
+</body>
+
+</html>
