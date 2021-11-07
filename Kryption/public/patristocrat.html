@@ -12,6 +12,7 @@
     <script src='https://www.gstatic.com/firebasejs/8.2.1/firebase.js'></script>
 
     <script src="https://chancejs.com/chance.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <script src="quotes.js"></script>
 
@@ -223,7 +224,7 @@
         const wordCountInput = document.getElementById("wordCountInput");
 
         let min_count = 3;
-        let count = (Number(localStorage.getItem("patristocratCount"))) ? Number(localStorage.getItem("patristocratCount")) : 5;
+        let max_count = (Number(localStorage.getItem("patristocratCount"))) ? Number(localStorage.getItem("patristocratCount")) : 5;
 
         const quote_lengths = Object.keys(quotes);
         const quoteRegex = new RegExp(`[\-_'"@?\/\(\)]`, "gmi");
@@ -232,25 +233,25 @@
         let correctAnswers = 0;
         let correctNeeded;
 
-        wordCountInput.placeholder = `Current: ${count}`;
+        wordCountInput.placeholder = `Current: ${max_count}`;
 
         function settings() {
             document.getElementById("settings").style.display = "flex";
         }
 
         wordCountInput.oninput = function () {
-            if (this.value > 97 || this.value < min_count) {
+            if (this.value > 97) {
                 this.value = 97;
             }
 
             if (this.value == 0 || this.value.toString() == "") {
-                localStorage.setItem("patristocratCount", "5");
-                count = 5;
-                wordCountInput.placeholder = `Default: 5`;
+                localStorage.setItem("patristocratCount", "15");
+                max_count = 15;
+                wordCountInput.placeholder = `Default: 15`;
             } else {
                 localStorage.setItem("patristocratCount", this.value.toString());
-                count = this.value;
-                wordCountInput.placeholder = `Current: ${count}`;
+                max_count = this.value;
+                wordCountInput.placeholder = `Current: ${max_count}`;
             }
 
             generate();
@@ -258,14 +259,14 @@
 
         function resetwordCount() {
             localStorage.setItem("patristocratCount", "15");
-            count = 15;
+            max_count = 15;
             wordCountInput.placeholder = `Default: 15`;
             wordCountInput.value = ``;
 
             generate();
         }
 
-        function generate(number = count) {
+        function generate() {
             time.innerHTML = "Decode the patristocrat!";
 
             questionTable.style.color = "white";
@@ -273,7 +274,7 @@
             newPatristocratButton.style.color = "white";
             settingsButton.style.color = "white";
 
-            function randomQuote(a = 3, b) {
+            function randomQuote(a = min_count, b = max_count) {
                 const min = a;
                 const max = b;
 
@@ -306,7 +307,11 @@
                 }
             }
 
-            let plaintext = randomQuote(min_count, count).slice(1);
+            if (max_count < min_count) {
+                return resetwordCount();
+            }
+
+            let plaintext = randomQuote(min_count, max_count).slice(1);
 
             let ciphertext = "";
             let ciphertextHtml = `
@@ -459,8 +464,8 @@
         }
 
         document.addEventListener('keydown', function (event) {
-            switch (event.key) {
-                case "Enter":
+            switch (event.keyCode) {
+                case 13:
                     generate();
                     break;
             }
