@@ -231,7 +231,7 @@
 
         let startTime;
         let correctAnswers = 0;
-        let correctNeeded;
+        let correctNeeded = 999999;
 
         wordCountInput.placeholder = `Current: ${max_count}`;
 
@@ -267,6 +267,9 @@
         }
 
         function generate() {
+            correctAnswers = 0;
+            correctNeeded = 999999;
+
             time.innerHTML = "Decode the patristocrat!";
 
             questionTable.style.color = "white";
