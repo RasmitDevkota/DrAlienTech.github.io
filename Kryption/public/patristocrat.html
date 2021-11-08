@@ -430,7 +430,7 @@
 
             let answered = ciphertextLetter.getAttribute("answered");
 
-            console.log(autocheck)
+            console.log(answered);
 
             if (answerBox.value == pt) {
                 if (answered == "false") {
@@ -439,7 +439,7 @@
 
                 ciphertextLetter.setAttribute("answered", "true");
 
-                if (autocheck == true) {
+                if (autocheck) {
                     ciphertextLetter.style.color = "#00FA9A";
                     answerBox.style.color = "#00FA9A";
                 }
@@ -471,7 +471,7 @@
 
                 ciphertextLetter.setAttribute("answered", "false");
 
-                if (autocheck == true) {
+                if (autocheck) {
                     ciphertextLetter.style.color = "#FF6347";
                     answerBox.style.color = "#FF6347";
                     time.style.color = "#FF6347";
@@ -495,8 +495,6 @@
 
                 time.innerHTML = "Decode the patristocrat!";
             }
-
-            console.log(ciphertextLetter.getAttribute("answered"));
 
             console.log(correctAnswers, "/", correctNeeded);
         }
