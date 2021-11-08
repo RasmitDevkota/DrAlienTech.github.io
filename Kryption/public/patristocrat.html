@@ -186,6 +186,13 @@
             </p>
         </div>
 
+        <div id="toggleAutochecker" class="settingsField">
+            <p id="toggleAutocheckerValue" class="settingsValue">
+                Autochecker <br>
+                <a id="toggleAutocheckerButton" onclick="toggleAutochecker();" style="background-color: unset; border: 2px solid white; font-size: 130%; line-height: 200%; width: 20%; height: fit-content; padding: 0.5% 3% 0.5% 3%;"></a>
+            </p>
+        </div>
+
         <p>
             Note: Changes are saved on your device but it is recommended to refresh the page in order to make sure all
             changes take place.
@@ -222,9 +229,15 @@
         const settingsButton = document.getElementById("settingsButton");
 
         const wordCountInput = document.getElementById("wordCountInput");
+        const toggleAutocheckerButton = document.getElementById("toggleAutocheckerButton")
 
         let min_count = 3;
-        let max_count = (Number(localStorage.getItem("patristocratCount"))) ? Number(localStorage.getItem("patristocratCount")) : 5;
+        let max_count = Number(localStorage.getItem("patristocratCount")) ? Number(localStorage.getItem("patristocratCount")) : 5;
+
+        wordCountInput.placeholder = `Current: ${max_count}`;
+
+        let autocheck = localStorage.getItem("patristocratToggleAutochecker") == null ? true : (localStorage.getItem("patristocratToggleAutochecker") == "true" ? true : false);
+        toggleAutocheckerButton.innerHTML = autocheck ? "ON" : "OFF";
 
         const quote_lengths = Object.keys(quotes);
         const quoteRegex = new RegExp(`[\-_'"@?\/\(\)]`, "gmi");
@@ -232,12 +245,6 @@
         let startTime;
         let correctAnswers = 0;
         let correctNeeded = 999999;
-
-        wordCountInput.placeholder = `Current: ${max_count}`;
-
-        function settings() {
-            document.getElementById("settings").style.display = "flex";
-        }
 
         wordCountInput.oninput = function () {
             if (this.value > 97) {
@@ -257,11 +264,23 @@
             generate();
         };
 
+        function settings() {
+            document.getElementById("settings").style.display = "flex";
+        }
+
         function resetwordCount() {
             localStorage.setItem("patristocratCount", "15");
             max_count = 15;
             wordCountInput.placeholder = `Default: 15`;
             wordCountInput.value = ``;
+
+            generate();
+        }
+
+        function toggleAutochecker() {
+            autocheck = autocheck ? false : true;
+            localStorage.setItem("patristocratToggleAutochecker", autocheck);
+            toggleAutocheckerButton.innerText = autocheck ? "ON" : "OFF";
 
             generate();
         }
@@ -411,7 +430,7 @@
 
             let answered = ciphertextLetter.getAttribute("answered");
 
-            console.log(answered);
+            console.log(autocheck)
 
             if (answerBox.value == pt) {
                 if (answered == "false") {
@@ -420,10 +439,24 @@
 
                 ciphertextLetter.setAttribute("answered", "true");
 
-                ciphertextLetter.style.color = "#00FA9A";
-                answerBox.style.color = "#00FA9A";
+                if (autocheck == true) {
+                    ciphertextLetter.style.color = "#00FA9A";
+                    answerBox.style.color = "#00FA9A";
+                }
 
                 if (correctAnswers == correctNeeded) {
+                    for (child of questionTable.children) {
+                        for (row of child.children[0].children) {
+                            for (cell of row.children) {
+                                cell.style.color = "#00FA9A";
+                            }
+
+                            for (input of cell.children) {
+                                input.style.color = "#00FA9A";
+                            }
+                        }
+                    }
+
                     time.style.color = "#00FA9A";
                     newPatristocratButton.style.color = "#00FA9A";
                     settingsButton.style.color = "#00FA9A";
@@ -438,13 +471,15 @@
 
                 ciphertextLetter.setAttribute("answered", "false");
 
-                ciphertextLetter.style.color = "#FF6347";
-                answerBox.style.color = "#FF6347";
-                time.style.color = "#FF6347";
-                newPatristocratButton.style.color = "#FF6347";
-                settingsButton.style.color = "#FF6347";
+                if (autocheck == true) {
+                    ciphertextLetter.style.color = "#FF6347";
+                    answerBox.style.color = "#FF6347";
+                    time.style.color = "#FF6347";
+                    newPatristocratButton.style.color = "#FF6347";
+                    settingsButton.style.color = "#FF6347";
 
-                time.innerHTML = `Oops, something's wrong! Check for mistakes!`;
+                    time.innerHTML = `Oops, something's wrong! Check for mistakes!`;
+                }
             } else {
                 if (answered == "true") {
                     correctAnswers--;
