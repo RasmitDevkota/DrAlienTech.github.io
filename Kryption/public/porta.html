@@ -71,12 +71,12 @@
 				width: 60%;
 			}
 
-			#newVigenereButtonWrapper {
+			#newPortaButtonWrapper {
 				display: flex;
 				justify-content: center;
 			}
 
-			#newVigenereButton {
+			#newPortaButton {
 				font-size: 80%;
 			}
 
@@ -144,6 +144,8 @@
 		<button onclick="window.location='affine.html'">Affine</button>
 
 		<button onclick="window.location='patristocrat.html'">Patristocrat</button>
+
+		<button onclick="window.location='porta.html'">Porta</button>
 	</p>
 
 	<body>
@@ -167,8 +169,8 @@
 
 		<div id="main">
 			<div id="questionDisplay">
-				<p id="questionText"></p>
 				<p id="keyText"></p>
+				<p id="questionText"></p>
 			</div>
 
 			<div id="answerBoxWrapper">
@@ -179,8 +181,8 @@
 				<p id="time">Encode the plaintext using the key!</p>
 			</div>
 
-			<div id="newVigenereButtonWrapper">
-				<button id="newVigenereButton" class="noselect" onclick="generate()">New Cipher</button>
+			<div id="newPortaButtonWrapper">
+				<button id="newPortaButton" class="noselect" onclick="generate()">New Cipher</button>
 			</div>
 			
 			<div id="settingsButtonWrapper">
@@ -193,12 +195,12 @@
 			const keyText = document.getElementById("keyText");
 			const answerBox = document.getElementById("answerBox");
 			const time = document.getElementById("time");
-			const newVigenereButton = document.getElementById("newVigenereButton");
+			const newPortaButton = document.getElementById("newPortaButton");
 			const settingsButton = document.getElementById("settingsButton");
 			
 			const charCountInput = document.getElementById("charCountInput");
 
-			let count = (Number(localStorage.getItem("vigenereCount"))) ? Number(localStorage.getItem("vigenereCount")) : 5;
+			let count = (Number(localStorage.getItem("portaCount"))) ? Number(localStorage.getItem("portaCount")) : 5;
 
 			charCountInput.placeholder = `Current: ${count}`;
 
@@ -214,11 +216,11 @@
 				}
 
 				if (this.value == 0 || this.value.toString() == "") {
-					localStorage.setItem("vigenereCount", "5");
+					localStorage.setItem("portaCount", "5");
 					count = 5;
 					charCountInput.placeholder = `Default: 5`;
 				} else {
-					localStorage.setItem("vigenereCount", this.value.toString());
+					localStorage.setItem("portaCount", this.value.toString());
 					count = this.value;
 					charCountInput.placeholder = `Current: ${count}`;
 				}
@@ -227,7 +229,7 @@
 			};
 
 			function resetCharCount() {
-				localStorage.setItem("vigenereCount", "5");
+				localStorage.setItem("portaCount", "5");
 				count = 5;
 				charCountInput.placeholder = `Default: 5`;
 				charCountInput.value = ``;
@@ -244,7 +246,7 @@
 				keyText.style.color = "white";
 				answerBox.style.color = "white";
 				time.style.color = "white";
-				newVigenereButton.style.color = "white";
+				newPortaButton.style.color = "white";
 				settingsButton.style.color = "white";
 
 				let plaintext = "";
@@ -258,16 +260,18 @@
 
 					plaintext += alphabet[seed];
 
-					ciphertext += alphabet[(alphabet.indexOf(key[i % 5]) + seed) % 26];
+					let keyNum = Math.floor(alphabet.indexOf(key[i % 5]) / 2);
+
+					ciphertext += alphabet[seed < 13 ? ((seed + keyNum) % 13 + 13) : ((seed - keyNum) % 13)];
 				}
 
 				if (mode == "e") {
-					questionText.innerHTML = plaintext;
+					questionText.innerHTML = "PT: " + plaintext;
 				} else {
-					questionText.innerHTML = ciphertext;
+					questionText.innerHTML = "CT: " + ciphertext;
 				}
 
-				keyText.innerHTML = key;
+				keyText.innerHTML = "Key: " + key;
 
 				console.log(plaintext, ciphertext, key);
 
@@ -280,7 +284,7 @@
 							keyText.style.color = "#00FA9A";
 							answerBox.style.color = "#00FA9A";
 							time.style.color = "#00FA9A";
-							newVigenereButton.style.color = "#00FA9A";
+							newPortaButton.style.color = "#00FA9A";
 							settingsButton.style.color = "#00FA9A";
 
 							var timeScore = (new Date() - startTime) / 1000;
@@ -290,7 +294,7 @@
 							keyText.style.color = "#FF6347";
 							answerBox.style.color = "#FF6347";
 							time.style.color = "#FF6347";
-							newVigenereButton.style.color = "#FF6347";
+							newPortaButton.style.color = "#FF6347";
 							settingsButton.style.color = "#FF6347";
 
 							time.innerHTML = `Oops, something's wrong! Check for mistakes!`;
@@ -299,7 +303,7 @@
 							keyText.style.color = "white";
 							answerBox.style.color = "white";
 							time.style.color = "white";
-							newVigenereButton.style.color = "white";
+							newPortaButton.style.color = "white";
 							settingsButton.style.color = "white";
 
 							time.innerHTML = "Encode the plaintext using the key!";
@@ -310,7 +314,7 @@
 							keyText.style.color = "#00FA9A";
 							answerBox.style.color = "#00FA9A";
 							time.style.color = "#00FA9A";
-							newVigenereButton.style.color = "#00FA9A";
+							newPortaButton.style.color = "#00FA9A";
 							settingsButton.style.color = "#00FA9A";
 
 							var timeScore = (new Date() - startTime) / 1000;
@@ -320,7 +324,7 @@
 							keyText.style.color = "#FF6347";
 							answerBox.style.color = "#FF6347";
 							time.style.color = "#FF6347";
-							newVigenereButton.style.color = "#FF6347";
+							newPortaButton.style.color = "#FF6347";
 							settingsButton.style.color = "#FF6347";
 
 							time.innerHTML = `Oops, something's wrong! Check for mistakes!`;
@@ -329,7 +333,7 @@
 							keyText.style.color = "white";
 							answerBox.style.color = "white";
 							time.style.color = "white";
-							newVigenereButton.style.color = "white";
+							newPortaButton.style.color = "white";
 							settingsButton.style.color = "white";
 
 							time.innerHTML = "Decode the ciphertext using the key!";
