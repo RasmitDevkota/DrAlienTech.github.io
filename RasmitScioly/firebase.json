@@ -1,0 +1,47 @@
+{
+  "database": {
+    "rules": "database.rules.json"
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "hosting": {
+    "site": "rasmitscioly",
+    "public": "public",
+    "redirects": [
+      {
+        "source": "/:competition-:event",
+        "destination": "/test.html?competition=:competition&event=:event",
+        "type": 301
+      },
+
+      {
+        "source": "/:competition-:event-:division",
+        "destination": "/test.html?competition=:competition&event=:event&division=:division",
+        "type": 301
+      },
+      {
+        "source": "/feedback/:competition-:event",
+        "destination": "/feedback.html?competition=:competition&event=:event",
+        "type": 301
+      },
+      {
+        "source": "/feedback/:competition-:event-:division",
+        "destination": "/feedback.html?competition=:competition&event=:event&division=:division",
+        "type": 301
+      }
+    ],
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "remoteconfig": {
+    "template": "remoteconfig.template.json"
+  }
+}
