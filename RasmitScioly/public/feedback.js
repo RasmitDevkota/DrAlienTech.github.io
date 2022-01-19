@@ -82,6 +82,14 @@ async function submit(competition = "", event = "", division = "") {
             thoughts: thoughts,
             criticism: criticism,
             fun: fun
+        }).then(function () {
+            console.log(`Successfully submitted feedback!`);
+
+            return alert(`Successfully submitted feedback! Thank you for your time!`);
+        }).catch(function (e) {
+            console.error(e);
+
+            return alert("Error occurred! Please contact a developer!");
         });
     }
 }
