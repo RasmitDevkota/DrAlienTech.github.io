@@ -1,4 +1,7 @@
-firebase.initializeApp({
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-app.js';
+import { getFirestore, collection } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-firestore.js';
+
+initializeApp({
     apiKey: "AIzaSyBVT22t-x2H76119AHG8SgPU0_A0U-N1uA",
     authDomain: "my-scrap-project.firebaseapp.com",
     databaseURL: "https://my-scrap-project.firebaseio.com",
@@ -9,5 +12,6 @@ firebase.initializeApp({
     measurementId: "G-S35B290G0V"
 });
 
-var db = firebase.firestore();
-var competitions = db.collection("competitions");
+var db = getFirestore();
+
+export { db };

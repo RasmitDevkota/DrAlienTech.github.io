@@ -19,10 +19,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap" rel="stylesheet">
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-
-    <script src="script.js"></script>
-    <script src="feedback.js"></script>
+    <script type="module" src="script.js"></script>
+    <script type="module" src="feedback.js"></script>
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -155,7 +153,7 @@
 
         <br>
 
-        <input class="btn btn-primary" value="Submit" onclick="submit()">
+        <input id="feedbackSubmit" class="btn btn-primary" value="Submit">
 
     </div>
 </body>
