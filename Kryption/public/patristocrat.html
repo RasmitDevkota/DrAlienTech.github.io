@@ -36,9 +36,9 @@
             justify-content: center;
             width: 50%;
             margin-top: 2%;
+            padding: 0vh 0vw 1vh 0vw;
         }
 
-        /* input, */
         button {
             border: 2px solid white;
         }
@@ -135,7 +135,7 @@
         .settingsField,
         .settingsValue,
         #closeSettingsWrapper,
-        #settings>p {
+        #settings > p {
             background-color: unset;
         }
 
@@ -167,7 +167,9 @@
 </head>
 
 <p style="z-index: 999; margin-top: -5%; text-align: center;">
-    <button onclick="window.location='index.html'">Morse</button>
+    <button onclick="window.location='index.html'">Morse Typing</button>
+
+    <button onclick="window.location='pollux.html'">Pollux</button>
 
     <button onclick="window.location='vigenere.html'">Vigenere</button>
 
@@ -176,6 +178,10 @@
     <button onclick="window.location='affine.html'">Affine</button>
 
     <button onclick="window.location='patristocrat.html'">Patristocrat</button>
+
+    <button onclick="window.location='xenocrypt.html'">Xenocrypt</button>
+
+    	<button onclick="window.location='atbash.html'">Atbash</button>
 </p>
 
 <body>
@@ -231,10 +237,10 @@
         const settingsButton = document.getElementById("settingsButton");
 
         const wordCountInput = document.getElementById("wordCountInput");
-        const toggleAutocheckerButton = document.getElementById("toggleAutocheckerButton")
+        const toggleAutocheckerButton = document.getElementById("toggleAutocheckerButton");
 
         let min_count = 3;
-        let max_count = Number(localStorage.getItem("patristocratCount")) ? Number(localStorage.getItem("patristocratCount")) : 5;
+        let max_count = Number(localStorage.getItem("patristocratCount")) ? Number(localStorage.getItem("patristocratCount")) : 15;
 
         wordCountInput.placeholder = `Current: ${max_count}`;
 
@@ -242,7 +248,6 @@
         toggleAutocheckerButton.innerHTML = autocheck ? "ON" : "OFF";
 
         const quote_lengths = Object.keys(quotes);
-        const quoteRegex = new RegExp(`[\-_'"@?\/\(\)]`, "gmi");
 
         let startTime;
         let correctAnswers = 0;

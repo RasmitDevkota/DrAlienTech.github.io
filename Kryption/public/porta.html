@@ -11,6 +11,10 @@
 		<script src='https://www.gstatic.com/firebasejs/8.2.1/firebase.js'></script>
 
 		<script src="https://chancejs.com/chance.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    	<script src="words.js"></script>
+    	<script src="quotes.js"></script>
 
 		<style>
 			* {
@@ -32,9 +36,10 @@
 				justify-content: center;
 				width: 50%;
 				margin-top: 2%;
+				padding: 0vh 0vw 1vh 0vw;
 			}
 
-			input, button {
+			button {
 				border: 2px solid white;
 			}
 
@@ -66,9 +71,38 @@
 				font-size: 80%;
 			}
 
-			#answerBox {
-				margin-top: 2%;
-				width: 60%;
+			#questionTable {
+				display: flex;
+				flex-direction: row;
+				justify-content: center;
+				flex-wrap: wrap;
+			}
+
+			table {
+				margin: 0.75vw;
+				table-layout: fixed;
+				box-sizing: border-box;
+				border: 0.5px solid white;
+				background-color: white;
+			}
+
+			td {
+				width: 2vw;
+				height: 100%;
+				padding: 0%;
+				font-size: 2vw;
+				text-align: center;
+				border: 0.5px solid white;
+			}
+
+			td > input {
+				width: 100%;
+				height: 100%;
+				padding: 0%;
+				/* font-size: 95%; */
+				text-align: center;
+				border: none;
+				outline: none;
 			}
 
 			#newPortaButtonWrapper {
@@ -105,7 +139,10 @@
 				font-size: 70%;
 			}
 
-			.settingsField, .settingsValue, #closeSettingsWrapper, #settings > p {
+			.settingsField,
+			.settingsValue,
+			#closeSettingsWrapper,
+			#settings > p {
 				background-color: unset;
 			}
 
@@ -137,7 +174,9 @@
 	</head>
 
 	<p style="z-index: 999; margin-top: -5%; text-align: center;">
-		<button onclick="window.location='index.html'">Morse</button>
+		<button onclick="window.location='index.html'">Morse Typing</button>
+
+    <button onclick="window.location='pollux.html'">Pollux</button>
 
 		<button onclick="window.location='vigenere.html'">Vigenere</button>
 
@@ -146,15 +185,28 @@
 		<button onclick="window.location='affine.html'">Affine</button>
 
 		<button onclick="window.location='patristocrat.html'">Patristocrat</button>
+
+    	<button onclick="window.location='xenocrypt.html'">Xenocrypt</button>
+
+    	<button onclick="window.location='atbash.html'">Atbash</button>
 	</p>
 
 	<body>
 
 		<div id="settings" style="display: none">
-			<div id="charCount" class="settingsField">
-				<p id="charCountValue" class="settingsValue">
-					# of Characters (1-50) <br> <input id="charCountInput" class="settingsInput" type="number" min="1" max="50" placeholder="Default: 5">
-					<a onclick="resetCharCount();" style="background-color: unset; font-size: 130%; line-height: 200%; width: 20%; height: fit-content;">Reset</a>
+			<div id="wordCount" class="settingsField">
+				<p id="wordCountValue" class="settingsValue">
+					Maximum # of Words (3-97) <br> <input id="wordCountInput" class="settingsInput" type="number" min="3" max="97"
+						placeholder="Default: 15">
+					<a onclick="resetwordCount();"
+						style="background-color: unset; font-size: 130%; line-height: 200%; width: 20%; height: fit-content;">Reset</a>
+				</p>
+			</div>
+
+			<div id="toggleAutochecker" class="settingsField">
+				<p id="toggleAutocheckerValue" class="settingsValue">
+					Autochecker <br>
+					<a id="toggleAutocheckerButton" onclick="toggleAutochecker();" style="background-color: unset; border: 2px solid white; font-size: 130%; line-height: 200%; width: 20%; height: fit-content; padding: 0.5% 3% 0.5% 3%;"></a>
 				</p>
 			</div>
 
@@ -168,13 +220,17 @@
 		</div>
 
 		<div id="main">
-			<div id="questionDisplay">
+			<!-- <div id="questionDisplay">
 				<p id="keyText"></p>
 				<p id="questionText"></p>
 			</div>
 
 			<div id="answerBoxWrapper">
 				<input id="answerBox" placeholder="Type here...">
+			</div> -->
+
+			<div id="questionTable">
+			
 			</div>
 
 			<div id="timeWrapper">
@@ -191,155 +247,261 @@
 		</div>
 
 		<script>
-			const questionText = document.getElementById("questionText");
-			const keyText = document.getElementById("keyText");
-			const answerBox = document.getElementById("answerBox");
+			const questionTable = document.getElementById("questionTable");
 			const time = document.getElementById("time");
 			const newPortaButton = document.getElementById("newPortaButton");
 			const settingsButton = document.getElementById("settingsButton");
 			
-			const charCountInput = document.getElementById("charCountInput");
+			const wordCountInput = document.getElementById("wordCountInput");
+			const toggleAutocheckerButton = document.getElementById("toggleAutocheckerButton");
 
-			let count = (Number(localStorage.getItem("portaCount"))) ? Number(localStorage.getItem("portaCount")) : 5;
+			let min_count = 3;
+			let max_count = (localStorage.getItem("portaCount")) ? Number(localStorage.getItem("portaCount")) : 15;
 
-			charCountInput.placeholder = `Current: ${count}`;
+			wordCountInput.placeholder = `Current: ${max_count}`;
 
-			let mode = "e";
+			let autocheck = localStorage.getItem("portaToggleAutochecker") == null ? true : (localStorage.getItem("portaToggleAutochecker") == "true" ? true : false);
+			toggleAutocheckerButton.innerHTML = autocheck ? "ON" : "OFF";
 
-			function settings() {
-				document.getElementById("settings").style.display = "flex";
-			}
+			const quote_lengths = Object.keys(quotes);
 
-			charCountInput.oninput = function() {
-				if (this.value > 50) {
-					this.value = 50;
+			let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+			let startTime;
+			let correctAnswers = 0;
+			let correctNeeded = 999999;
+
+			wordCountInput.oninput = function () {
+				if (this.value > 97) {
+					this.value = 97;
 				}
 
 				if (this.value == 0 || this.value.toString() == "") {
-					localStorage.setItem("portaCount", "5");
-					count = 5;
-					charCountInput.placeholder = `Default: 5`;
+					localStorage.setItem("portaCount", "15");
+					max_count = 15;
+					wordCountInput.placeholder = `Default: 15`;
 				} else {
 					localStorage.setItem("portaCount", this.value.toString());
-					count = this.value;
-					charCountInput.placeholder = `Current: ${count}`;
+					max_count = this.value;
+					wordCountInput.placeholder = `Current: ${max_count}`;
 				}
 
 				generate();
 			};
 
-			function resetCharCount() {
-				localStorage.setItem("portaCount", "5");
-				count = 5;
-				charCountInput.placeholder = `Default: 5`;
-				charCountInput.value = ``;
+			function settings() {
+				document.getElementById("settings").style.display = "flex";
+			}
+
+			function resetwordCount() {
+				localStorage.setItem("portaCount", "15");
+				max_count = 15;
+				wordCountInput.placeholder = `Default: 15`;
+				wordCountInput.value = ``;
 
 				generate();
 			}
 
-			function generate(number = count) {
-				answerBox.value = "";
+			function toggleAutochecker() {
+				autocheck = autocheck ? false : true;
+				localStorage.setItem("portaToggleAutochecker", autocheck);
+				toggleAutocheckerButton.innerText = autocheck ? "ON" : "OFF";
 
-				time.innerHTML = "Encode the plaintext using the key!";
+				generate();
+			}
 
-				questionText.style.color = "white";
-				keyText.style.color = "white";
-				answerBox.style.color = "white";
+			function generate() {
+				correctAnswers = 0;
+				correctNeeded = 999999;
+
 				time.style.color = "white";
 				newPortaButton.style.color = "white";
 				settingsButton.style.color = "white";
 
-				let plaintext = "";
-				let ciphertext = "";
-				let key = chance.word({ length: 5 }).toUpperCase();
+				function randomQuote(a = min_count, b = max_count) {
+					const min = a;
+					const max = b;
 
-				let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+					const length = Math.floor(Math.random() * quote_lengths.length);
+					var tryQuoteLength = quote_lengths[length];
 
-				for (let i = 0; i < number; i++) {
-					let seed = Math.floor(Math.random() * 26);
-
-					plaintext += alphabet[seed];
-
-					let keyNum = Math.floor(alphabet.indexOf(key[i % 5]) / 2);
-
-					ciphertext += alphabet[seed < 13 ? ((seed + keyNum) % 13 + 13) : ((seed - keyNum) % 13)];
-				}
-
-				if (mode == "e") {
-					questionText.innerHTML = "Text: " + plaintext;
-				} else {
-					questionText.innerHTML = "Text: " + ciphertext;
-				}
-
-				keyText.innerHTML = "Key: " + key;
-
-				console.log(plaintext, ciphertext, key);
-
-				const startTime = new Date();
-
-				answerBox.oninput = function () {
-					if (mode == "e") {
-						if (this.value == ciphertext) {
-							questionText.style.color = "#00FA9A";
-							keyText.style.color = "#00FA9A";
-							answerBox.style.color = "#00FA9A";
-							time.style.color = "#00FA9A";
-							newPortaButton.style.color = "#00FA9A";
-							settingsButton.style.color = "#00FA9A";
-
-							var timeScore = (new Date() - startTime) / 1000;
-							time.innerHTML = `Correct! You solved it in ${timeScore} seconds!`;
-						} else if (!ciphertext.includes(this.value)) {
-							questionText.style.color = "#FF6347";
-							keyText.style.color = "#FF6347";
-							answerBox.style.color = "#FF6347";
-							time.style.color = "#FF6347";
-							newPortaButton.style.color = "#FF6347";
-							settingsButton.style.color = "#FF6347";
-
-							time.innerHTML = `Oops, something's wrong! Check for mistakes!`;
-						} else {
-							questionText.style.color = "white";
-							keyText.style.color = "white";
-							answerBox.style.color = "white";
-							time.style.color = "white";
-							newPortaButton.style.color = "white";
-							settingsButton.style.color = "white";
-
-							time.innerHTML = "Encode the plaintext using the key!";
-						}
-					} else {
-						if (this.value == plaintext) {
-							questionText.style.color = "#00FA9A";
-							keyText.style.color = "#00FA9A";
-							answerBox.style.color = "#00FA9A";
-							time.style.color = "#00FA9A";
-							newPortaButton.style.color = "#00FA9A";
-							settingsButton.style.color = "#00FA9A";
-
-							var timeScore = (new Date() - startTime) / 1000;
-							time.innerHTML = `Correct! You solved it in ${timeScore} seconds!`;
-						} else if (!plaintext.includes(this.value)) {
-							questionText.style.color = "#FF6347";
-							keyText.style.color = "#FF6347";
-							answerBox.style.color = "#FF6347";
-							time.style.color = "#FF6347";
-							newPortaButton.style.color = "#FF6347";
-							settingsButton.style.color = "#FF6347";
-
-							time.innerHTML = `Oops, something's wrong! Check for mistakes!`;
-						} else {
-							questionText.style.color = "white";
-							keyText.style.color = "white";
-							answerBox.style.color = "white";
-							time.style.color = "white";
-							newPortaButton.style.color = "white";
-							settingsButton.style.color = "white";
-
-							time.innerHTML = "Decode the ciphertext using the key!";
-						}
+					if (tryQuoteLength > max || tryQuoteLength < min) {
+						return randomQuote(min, max);
 					}
-				};
+
+					const tryQuotes = quotes[tryQuoteLength];
+					const tryQuote = tryQuotes[Math.floor(Math.random() * tryQuotes.length)];
+
+					const quoteArray = tryQuote.replace(/,|\.|\!|\?| /g, "").split("");
+
+					let quote = new String();
+
+					for (q in quoteArray) {
+						if (q % 5 == 0) {
+							quote += " ";
+						}
+
+						quote += quoteArray[q];
+					}
+
+					return quote;
+				}
+
+				if (max_count < min_count) {
+					return resetwordCount();
+				}
+
+				let keyWord = words[Math.floor(Math.random() * words.length)].toUpperCase();
+
+				while (keyWord.length > 7) {
+					keyWord = words[Math.floor(Math.random() * words.length)].toUpperCase();
+				}
+
+				const keyLetters = keyWord.split("");
+				const key  = keyLetters.map(letter => {
+					return Math.floor(alphabet.indexOf(letter) / 2);
+				});
+
+				const keyLength = key.length;
+
+				const plaintextArray = randomQuote(min_count, max_count).replace(/[^a-zA-Z]/g, "").toUpperCase().match(new RegExp(`.{1,${keyLength}}`, "g"));
+				const plaintext = plaintextArray.join(" ");
+				const plaintextCombined = plaintextArray.join("");
+
+				let ciphertext = "";
+
+				let l = 0;
+				for (let pt of plaintext) {
+					const i = alphabet.indexOf(pt);
+
+					ciphertext += (i == -1) ? " " : alphabet[(i < 13 ? ((i + key[l++ % keyLength]) % 13 + 13) : ((i - key[l++ % keyLength]) % 13))];
+				}
+
+				const ciphertextArray = ciphertext.split(" ");
+
+				correctNeeded = ciphertext.replace(/ /g, "").length;
+
+				let ciphertextHtml = ``;
+
+				for (let i in ciphertextArray) {
+					let ptWord = plaintextArray[i];
+					let ctWord = ciphertextArray[i];
+
+					let topRow = ``;
+					let bottomRow = ``;
+
+					for (j in ptWord) {
+						let pt = ptWord[j];
+						let ct = ctWord[j];
+
+						topRow += `
+							<td id="ciphertext${i}${j}" answered="false">${ct}</td>
+						`;
+
+						bottomRow += `
+							<td>
+								<input class="answerBox" placeholder="—" maxlength="1" type="text" autocapitalize="on" oninput="answerBoxInput('${pt}', '${ct}', '${keyWord}', '${i}${j}', this)">
+							</td>
+						`;
+					}
+
+					ciphertextHtml += `
+						<table cellpadding="0" cellspacing="0">
+							<tbody>
+								<tr>
+									${topRow}
+								</tr>
+								<tr>
+									${bottomRow}
+								</tr>
+							</tbody>
+						</table>
+					`;
+				}
+
+				questionTable.innerHTML = ciphertextHtml;
+
+				time.innerHTML = `Decode the porta cipher with the key ${keyWord}!`;
+
+				console.log(plaintext)
+
+				startTime = new Date();
+			}
+
+        	function answerBoxInput(pt, ct, keyWord, ciphertextId, answerBox) {
+				ciphertextLetter = document.getElementById(`ciphertext${ciphertextId}`);
+
+				console.log(pt, ct, answerBox.value);
+
+				let answered = ciphertextLetter.getAttribute("answered");
+
+				console.log(answered);
+
+				if (answerBox.value == pt) {
+					if (answered == "false") {
+						correctAnswers++;
+					}
+
+					ciphertextLetter.setAttribute("answered", "true");
+
+					if (autocheck) {
+						ciphertextLetter.style.color = "#00FA9A";
+						answerBox.style.color = "#00FA9A";
+					}
+
+					if (correctAnswers == correctNeeded) {
+						for (child of questionTable.children) {
+							for (row of child.children[0].children) {
+								for (cell of row.children) {
+									cell.style.color = "#00FA9A";
+								}
+
+								for (input of cell.children) {
+									input.style.color = "#00FA9A";
+								}
+							}
+						}
+
+						time.style.color = "#00FA9A";
+						newPortaButton.style.color = "#00FA9A";
+						settingsButton.style.color = "#00FA9A";
+
+						var timeScore = (new Date() - startTime) / 1000;
+						time.innerHTML = `Correct! You solved it in ${timeScore} seconds!`;
+					}
+				} else if (!["", " "].includes(answerBox.value)) {
+					if (answered == "true") {
+						correctAnswers--;
+					}
+
+					ciphertextLetter.setAttribute("answered", "false");
+
+					if (autocheck) {
+						ciphertextLetter.style.color = "#FF6347";
+						answerBox.style.color = "#FF6347";
+						time.style.color = "#FF6347";
+						newPortaButton.style.color = "#FF6347";
+						settingsButton.style.color = "#FF6347";
+
+						time.innerHTML = `Oops, something's wrong! Check for mistakes!`;
+					}
+				} else {
+					if (answered == "true") {
+						correctAnswers--;
+					}
+
+					ciphertextLetter.setAttribute("answered", "false");
+
+					ciphertextLetter.style.color = "white";
+					answerBox.style.color = "white";
+					time.style.color = "white";
+					newPortaButton.style.color = "white";
+					settingsButton.style.color = "white";
+
+					time.innerHTML = `Decode the porta cipher with the key ${keyWord}!`;
+				}
+
+				console.log(correctAnswers.toString() + "/" + correctNeeded.toString());
 			}
 
 			document.addEventListener('keydown', function (event) {

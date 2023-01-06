@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Kryption</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500&display=swap" rel="stylesheet">
+
+    <script src='https://www.gstatic.com/firebasejs/8.2.1/firebase.js'></script>
+
+    <script src="https://chancejs.com/chance.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script src="xenocryptQuotes.js"></script>
+
+    <style>
+        * {
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: larger;
+            color: white;
+            background-color: black;
+        }
+
+        html {
+            display: flex;
+            justify-content: center;
+            margin-top: 1%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 50%;
+            margin-top: 2%;
+            padding: 0vh 0vw 1vh 0vw;
+        }
+
+        button {
+            border: 2px solid white;
+        }
+
+        button {
+            width: 30%;
+            margin-top: 3%;
+        }
+
+        button:hover {
+            cursor: pointer;
+        }
+
+        #main {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        #questionText {
+            word-wrap: break-word;
+        }
+
+        #timeWrapper {
+            margin-top: 2%;
+        }
+
+        #time {
+            font-size: 80%;
+        }
+
+        #questionTable {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        table {
+            margin: 0.75vw;
+            table-layout: fixed;
+            box-sizing: border-box;
+            border: 0.5px solid white;
+            background-color: rgb(24, 24, 24);
+        }
+
+        td {
+            width: 2vw;
+            height: 100%;
+            padding: 0%;
+            font-size: 2vw;
+            text-align: center;
+            border: 0.5px solid white;
+        }
+
+        td > input {
+            width: 100%;
+            height: 100%;
+            padding: 0%;
+            text-align: center;
+            border: none;
+            outline: none;
+        }
+
+        #newXenocryptButtonWrapper {
+            display: flex;
+            justify-content: center;
+        }
+
+        #newXenocryptButton {
+            font-size: 80%;
+        }
+
+        #settingsButtonWrapper {
+            display: flex;
+            justify-content: center;
+            font-size: 80%;
+        }
+
+        #settings {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: absolute;
+            z-index: 1000;
+            width: 30%;
+            margin-top: 5%;
+            margin-left: 7.5%;
+            margin-right: 7.5%;
+            padding: 2% 2%;
+            background-color: rgb(27, 27, 27);
+            border: 10px solid rgb(68, 68, 68);
+        }
+
+        #settings p,
+        #settings button {
+            font-size: 70%;
+        }
+
+        .settingsField,
+        .settingsValue,
+        #closeSettingsWrapper,
+        #settings>p {
+            background-color: unset;
+        }
+
+        .settingsField {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .settingsValue {
+            text-align: center;
+        }
+
+        .settingsValue>a:hover {
+            cursor: pointer;
+        }
+
+        .settingsInput {
+            margin-top: 2%;
+            width: 50%;
+        }
+
+        #closeSettingsWrapper {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<p style="z-index: 999; margin-top: -5%; text-align: center;">
+    <button onclick="window.location='index.html'">Morse Typing</button>
+
+    <button onclick="window.location='pollux.html'">Pollux</button>
+
+    <button onclick="window.location='vigenere.html'">Vigenere</button>
+
+    <button onclick="window.location='porta.html'">Porta</button>
+
+    <button onclick="window.location='affine.html'">Affine</button>
+
+    <button onclick="window.location='patristocrat.html'">Patristocrat</button>
+
+    <button onclick="window.location='xenocrypt.html'">Xenocrypt</button>
+
+    	<button onclick="window.location='atbash.html'">Atbash</button>
+</p>
+
+<body>
+
+    <div id="settings" style="display: none">
+        <div id="wordCount" class="settingsField">
+            <p id="wordCountValue" class="settingsValue">
+                Maximum # of Words (3-97) <br> <input id="wordCountInput" class="settingsInput" type="number" min="3"
+                    max="97" placeholder="Default: 15">
+                <a onclick="resetwordCount();"
+                    style="background-color: unset; font-size: 130%; line-height: 200%; width: 20%; height: fit-content;">Reset</a>
+            </p>
+        </div>
+
+        <div id="toggleAutochecker" class="settingsField">
+            <p id="toggleAutocheckerValue" class="settingsValue">
+                Autochecker <br>
+                <a id="toggleAutocheckerButton" onclick="toggleAutochecker();"
+                    style="background-color: unset; border: 2px solid white; font-size: 130%; line-height: 200%; width: 20%; height: fit-content; padding: 0.5% 3% 0.5% 3%;"></a>
+            </p>
+        </div>
+
+        <p>
+            Note: Changes are saved on your device but it is recommended to refresh the page in order to make sure all
+            changes take place.
+        </p>
+
+        <div id="closeSettingsWrapper">
+            <button id="closeSettings" class="noselect"
+                onclick="document.getElementById('settings').style.display = 'none'">Close</button>
+        </div>
+    </div>
+
+    <div id="main">
+        <div id="questionTable">
+
+        </div>
+
+        <p style="font-size: 1.5vw; margin: 3vh 0vw 0vh 0vw;">To input Ñ, type "~" (to the left of 1 on a keyboard).</p>
+
+        <div id="timeWrapper">
+            <p id="time">Decode the xenocrypt!</p>
+        </div>
+
+        <div id="newXenocryptButtonWrapper">
+            <button id="newXenocryptButton" class="noselect" onclick="generate()">New Cipher</button>
+        </div>
+
+        <div id="settingsButtonWrapper">
+            <button id="settingsButton" class="noselect" onclick="settings()">Settings</button>
+        </div>
+    </div>
+
+    <script>
+        const questionTable = document.getElementById("questionTable");
+        const time = document.getElementById("time");
+        const newXenocryptButton = document.getElementById("newXenocryptButton");
+        const settingsButton = document.getElementById("settingsButton");
+
+        const wordCountInput = document.getElementById("wordCountInput");
+        const toggleAutocheckerButton = document.getElementById("toggleAutocheckerButton")
+
+        let min_count = 3;
+        let max_count = Number(localStorage.getItem("xenocryptCount")) ? Number(localStorage.getItem("xenocryptCount")) : 5;
+
+        wordCountInput.placeholder = `Current: ${max_count}`;
+
+        let autocheck = localStorage.getItem("xenocryptToggleAutochecker") == null ? true : (localStorage.getItem("xenocryptToggleAutochecker") == "true" ? true : false);
+        toggleAutocheckerButton.innerHTML = autocheck ? "ON" : "OFF";
+
+        const quoteLengths = Object.keys(quotes);
+        const quoteRegex = new RegExp(`[\-_'"@?\/\(\)]`, "gmi");
+
+        let startTime;
+        let correctAnswers = 0;
+        let correctNeeded = 999999;
+
+        wordCountInput.oninput = function () {
+            if (this.value > 97) {
+                this.value = 97;
+            }
+
+            if (this.value == 0 || this.value.toString() == "") {
+                localStorage.setItem("xenocryptCount", "15");
+                max_count = 15;
+                wordCountInput.placeholder = `Default: 15`;
+            } else {
+                localStorage.setItem("xenocryptCount", this.value.toString());
+                max_count = this.value;
+                wordCountInput.placeholder = `Current: ${max_count}`;
+            }
+
+            generate();
+        };
+
+        function settings() {
+            document.getElementById("settings").style.display = "flex";
+        }
+
+        function resetwordCount() {
+            localStorage.setItem("xenocryptCount", "15");
+            max_count = 15;
+            wordCountInput.placeholder = `Default: 15`;
+            wordCountInput.value = ``;
+
+            generate();
+        }
+
+        function toggleAutochecker() {
+            autocheck = autocheck ? false : true;
+            localStorage.setItem("xenocryptToggleAutochecker", autocheck);
+            toggleAutocheckerButton.innerText = autocheck ? "ON" : "OFF";
+
+            generate();
+        }
+
+        function generate() {
+            correctAnswers = 0;
+            correctNeeded = 999999;
+
+            time.innerHTML = "Decode the xenocrypt!";
+
+            questionTable.style.color = "white";
+            time.style.color = "white";
+            newXenocryptButton.style.color = "white";
+            settingsButton.style.color = "white";
+
+            function randomQuote(a = min_count, b = max_count) {
+                const min = 3;
+                const max = 300;
+
+                let length = Math.floor(Math.random() * (max - min)) + min;
+
+                if (!quoteLengths.includes(length.toString())) {
+                    let i = 1;
+                    let j = -1;
+
+                    Search:
+                    while (length > min && length < max) {
+                        if (quoteLengths.includes(length.toString())) {
+                            break Search;
+                        } else {
+                            j *= -1;
+                            i = (Math.abs(i) + 1) * j;
+
+                            length += i;
+                        }
+
+                        if (length == min || length == max) {
+                            alert("No quotes found in that word count range! Resetting to default!");
+
+                            resetwordCount();
+
+                            return randomQuote();
+                        }
+                    }
+                }
+
+                const quotesByLength = quotes[length];
+                console.log(quotesByLength);
+                const quote = quotesByLength[Math.floor(Math.random() * quotesByLength.length)];
+
+                return quote.toUpperCase();
+            }
+
+            if (max_count < min_count) {
+                return resetwordCount();
+            }
+
+            let plaintext = randomQuote(min_count, max_count);
+
+            let ciphertext = "";
+            let ciphertextHtml = ``;
+
+            let alphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split("");
+
+            let unusedAlphabets = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split("");
+            let mapping = new Map();
+
+            function mapAlphabet(letter) {
+                let alphabetIndex = Math.floor(Math.random() * unusedAlphabets.length);
+                let encryption = unusedAlphabets[alphabetIndex];
+
+                if (letter == encryption) {
+                    encryption = unusedAlphabets[++alphabetIndex % unusedAlphabets.length];
+
+                    if (letter == encryption) {
+                        generate();
+                    }
+                }
+
+                unusedAlphabets.splice(alphabetIndex, 1);
+
+                return encryption;
+            }
+
+            for (letter of alphabet) {
+                mapping[letter] = mapAlphabet(letter);
+            }
+
+            correctNeeded = 0;
+
+            for (pt of plaintext) {
+                let ct = "";
+
+                if (alphabet.includes(pt)) {
+                    ct = mapping[pt];
+
+                    correctNeeded++;
+                } else {
+                    ct = pt;
+                }
+
+                ciphertext += ct;
+            }
+
+            const plaintextArray = plaintext.split(new RegExp(" ", "g"));
+            const ciphertextArray = ciphertext.split(new RegExp(" ", "g"));
+
+            console.log(ciphertext, ciphertextArray);
+
+            for (let i in ciphertextArray) {
+                const plaintextWord = plaintextArray[i];
+                const ciphertextWord = ciphertextArray[i];
+
+                console.log(plaintextWord, ciphertextWord)
+
+                let topRow = ``;
+                let bottomRow = ``;
+
+                for (let j in ciphertextWord) {
+                    let pt = plaintextWord[j];
+                    let ct = ciphertextWord[j];
+
+                    console.log(pt, ct);
+
+                    if (ct.match(/[A-Z]|Ñ/i)) {
+                        topRow += `
+                            <td id="ciphertext${i}${j}" answered="false">${ct}</td>
+                        `;
+
+                        bottomRow += `
+                            <td>
+                                <input class="answerBox" placeholder="—" maxlength="1" type="text" autocapitalize="on" oninput="answerBoxInput('${pt}', '${ct}', '${i}${j}', this)">
+                            </td>
+                        `;
+                    } else {
+                        topRow += `
+                            <td id="ciphertext${i}${j}" answered="false">${ct}</td>
+                        `;
+
+                        bottomRow += `
+                            <td></td>
+                        `;
+                    }
+                }
+
+                console.log("row made", i);
+
+                ciphertextHtml += `
+                    <table cellpadding="0" cellspacing="0">
+                        <tbody>
+                            <tr>
+                                ${topRow}
+                            </tr>
+                            <tr>
+                                ${bottomRow}
+                            </tr>
+                        </tbody>
+                    </table>
+                `;
+            }
+
+            questionTable.innerHTML = ciphertextHtml;
+
+            console.log("Plaintext:", plaintext, "\n\nCiphertext:", ciphertext);
+
+            startTime = new Date();
+        }
+
+        function answerBoxInput(pt, ct, ciphertextId, answerBox) {
+            ciphertextLetter = document.getElementById(`ciphertext${ciphertextId}`);
+
+            console.log(pt, ct, answerBox.value);
+
+            let answered = ciphertextLetter.getAttribute("answered");
+
+            console.log(answered);
+
+            if (answerBox.value == "~") {
+                answerBox.value = "Ñ";
+            }
+
+            if (answerBox.value == pt) {
+                if (answered == "false") {
+                    correctAnswers++;
+                }
+
+                ciphertextLetter.setAttribute("answered", "true");
+
+                if (autocheck) {
+                    ciphertextLetter.style.color = "#00FA9A";
+                    answerBox.style.color = "#00FA9A";
+                }
+
+                if (correctAnswers == correctNeeded) {
+                    for (child of questionTable.children) {
+                        for (row of child.children[0].children) {
+                            for (cell of row.children) {
+                                cell.style.color = "#00FA9A";
+                            }
+
+                            for (input of cell.children) {
+                                input.style.color = "#00FA9A";
+                            }
+                        }
+                    }
+
+                    time.style.color = "#00FA9A";
+                    newXenocryptButton.style.color = "#00FA9A";
+                    settingsButton.style.color = "#00FA9A";
+
+                    var timeScore = (new Date() - startTime) / 1000;
+                    time.innerHTML = `Correct! You solved it in ${timeScore} seconds!`;
+                }
+            } else if (!["", " "].includes(answerBox.value)) {
+                if (answered == "true") {
+                    correctAnswers--;
+                }
+
+                ciphertextLetter.setAttribute("answered", "false");
+
+                if (autocheck) {
+                    ciphertextLetter.style.color = "#FF6347";
+                    answerBox.style.color = "#FF6347";
+                    time.style.color = "#FF6347";
+                    newXenocryptButton.style.color = "#FF6347";
+                    settingsButton.style.color = "#FF6347";
+
+                    time.innerHTML = `Oops, something's wrong! Check for mistakes!`;
+                }
+            } else {
+                if (answered == "true") {
+                    correctAnswers--;
+                }
+
+                ciphertextLetter.setAttribute("answered", "false");
+
+                ciphertextLetter.style.color = "white";
+                answerBox.style.color = "white";
+                time.style.color = "white";
+                newXenocryptButton.style.color = "white";
+                settingsButton.style.color = "white";
+
+                time.innerHTML = "Decode the xenocrypt!";
+            }
+
+            console.log(correctAnswers, "/", correctNeeded);
+        }
+
+        document.addEventListener('keydown', function (event) {
+            switch (event.keyCode) {
+                case 13:
+                    generate();
+                    break;
+            }
+        });
+
+        window.addEventListener("load", () => { generate(); });
+    </script>
+
+</body>
+
+</html>

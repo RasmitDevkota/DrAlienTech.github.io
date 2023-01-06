@@ -1,44 +1,103 @@
-<!DOCTYPE html>
 <html>
+	<head>
+		<title>TypeUp</title>
 
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>TypeUp</title>
+		<link rel="preconnect" href="https://fonts.gstatic.com">
+		<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap" rel="stylesheet">
+		
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+			integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+			crossorigin="anonymous"></script>
+		
+		<script src="https://apis.google.com/js/api:client.js"></script>
+		
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+		<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+		<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+		
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+		
+		<script>
+			window.MathJax = {
+				tex: {
+					inlineMath: [
+						[
+							'$', '$'
+						],
+						[
+							'\\(', '\\)'
+						]
+					]
+				}
+			};
+		</script>
 
-	<script src='https://www.gstatic.com/firebasejs/8.6.8/firebase.js'></script>
+		<script>
+			import {
+				initializeApp
+			} from "https://www.gstatic.com/firebasejs/9.8.2/firebase-app.js";
 
-	<script>
-		firebase.initializeApp({
-			apiKey: "AIzaSyBVT22t-x2H76119AHG8SgPU0_A0U-N1uA",
-			authDomain: "my-scrap-project.firebaseapp.com",
-			databaseURL: "https://my-scrap-project.firebaseio.com",
-			projectId: "my-scrap-project",
-			storageBucket: "my-scrap-project.appspot.com",
-			messagingSenderId: "334998588870",
-			appId: "1:334998588870:web:fd80d1fe0d8237ccc536c7",
-			measurementId: "G-S35B290G0V"
-		});
+			import {
+				getDatabase,
+				ref,
+				child,
+				get
+			} from 'https://www.gstatic.com/firebasejs/9.8.2/firebase-database.js';
 
-		firebase.analytics();
+			import {
+				getStorage,
+				ref
+			} from "firebase/storage";
 
-		var storage = firebase.storage();
-		var files = storage.ref().child("TypeUp");
+			import {
+				LaTeXJSComponent
+			} from "https://cdn.jsdelivr.net/npm/latex.js/dist/latex.mjs";
 
-		function createFile(path) {
-			files.put(file).then((snapshot) => {
-				console.log('Uploaded a blob or file!');
+			customElements.define("latex", LaTeXJSComponent);
+
+			firebase.initializeApp({
+				apiKey: "AIzaSyBVT22t-x2H76119AHG8SgPU0_A0U-N1uA",
+				authDomain: "my-scrap-project.firebaseapp.com",
+				databaseURL: "https://my-scrap-project.firebaseio.com",
+				projectId: "my-scrap-project",
+				storageBucket: "my-scrap-project.appspot.com",
+				messagingSenderId: "334998588870",
+				appId: "1:334998588870:web:fd80d1fe0d8237ccc536c7",
+				measurementId: "G-S35B290G0V"
 			});
-		}
 
-		function loadFile(path) {
+			const rtdb = getDatabase();
 
-		}
-	</script>
-</head>
+			var storage = getStorage();
+			var files = child(storage, "TypeUp");
 
-<body>
+			function createFile(path) {
+				files.put(file).then((snapshot) => {
+					console.log('Uploaded a blob or file!');
+				});
+			}
 
-</body>
+			function loadFiles() {
+				listAll(files).then((res) => {
+					res.items.forEach((itemRef) => {
+						console.log(itemRef);
+					});
+				});
+			}
 
+			window.addEventListener("load", () => {
+				loadFiles();
+			});
+		</script>
+	</head>
+	<body>
+		<div>
+			<textarea name="" id="" cols="30" rows="10"></textarea>
+		</div>
+	</body>
 </html>

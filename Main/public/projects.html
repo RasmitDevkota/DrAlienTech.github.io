@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Rasmit Devkota - Projects</title>
@@ -10,103 +9,149 @@
     <script src="projects.js"></script>
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="projects.css">
-</head>
+  </head>
 
-<body>
+  <body>
     <nav>
-        <div>
-            <img src="logo.png" alt="">
-        </div>
+      <div>
+        <img src="logo.png" alt="">
+      </div>
 
-        <div>
-            <a href="about.html">About</a>
-            <a href="projects.html">Projects</a>
-            <a href="index.html">Home</a>
-            <a href="ventures.html">Ventures</a>
-            <a href="contact.html">Contact</a>
-        </div>
+      <div>
+        <a href="about.html">About</a>
+        <a href="index.html">Home</a>
+        <a href="projects.html">Projects</a>
+      </div>
     </nav>
 
-    <div>
-        <h1 class="title">Projects</h1>
+    <div id="main">
+      <h1 class="title">Projects</h1>
 
-        <div class="project">
-            <a onclick="window.open('https://covidbot19.web.app', '_blank');">CovidBot19</a>
+      <div>
+        <h2>Computer Science Projects</h2>
 
-            <p>
-                <u>Description:</u> COVID-19 data tracking website and Discord bot.
-            </p>
+        <h2>
+          <a onclick="window.open('https://github.com/DrAlienTech', '_blank')">See my GitHub for all projects!</a>
+        </h2>
+      </div>
 
-            <p>
-                <u>Background:</u> While chatting on the FBLA Discord server, I was contacted by one of the
-                administrators there, named "Megasteel", who was working on collecting COVID-19 data and
-                compiling it into a spreadsheet. Previously, he had been manually finding data on various
-                sites for every single state, but this was terribly inefficient. His request: make a web
-                scraper that would collect data from various sites and enter it into a spreadsheet. We
-                found another person to help, a person named "gido" from the Cyberpatriot Discord server,
-                and made a group chat where we began discussing the project.
-                <br>
-                Our initial plan was to scrape the data from sites that we had chosen ourselves, like the New
-                York Times, using Google Sheets functions that were supposedly able to retrieve and parse HTML.
-                However, after hours of struggling, we concluded that this would not work since the page format
-                was very hard to traverse. I had also attempted using a Python script to scrape, since Python has
-                numerous well-known scraping libraries, but ended up giving up on this plan as well. Now, we
-                were back to the drawing board. Our next idea was to find an API that had data on COVID-19. Now
-                that we were looking for API data, however, we decided to look for even more reliable and detailed
-                data. I happened to stumble upon a John Hopkins University API hosted by a GIS software company
-                known as Esri, known for their interactive GIS dashboards made through ArcGIS. This API was
-                reliable, coming from JHU, and was even more detailed, giving us access to county-level data
-                which was updated multiple times a day.
-                <br>
-                We decided to make a Discord bot (CovidBot19) which users could use to get updates on the pandemic
-                situation.
-            </p>
-        </div>
+      <div class="project">
+        <a onclick="window.open('https://github.com/DrAlienTech/WiFiSignalScanner', '_blank');">WiFi Signal Scanner</a>
 
-        <div class="project">
-            <a onclick="window.open('https://wypretzel.web.app', '_blank');">The Missing Pretzels</a>
+        <p>
+          <u>Description:</u> Measure the signal strength in RSSI (dBm) of a WiFi signal
+          using this app!
+        </p>
 
-            <p>
-                <u>Description:</u> Catch all of the pretzels falling from the sky by hovering over them!
-            </p>
+        <p>
+          <u>Platforms:</u> Android
+        </p>
 
-            <p>
-                <u>Background:</u>
-            </p>
-        </div>
+        <p>
+          <u>Background:</u> The Science Olympiad event WiFi Lab requires competitors to
+          build an antenna which can transmit WiFi signals from a router to a computer. I
+          found it cumbersome having to use a computer to test my antenna from large
+          distances, so I decided to create this Android app which allows me to gather data
+          on my antenna on my phone and quickly export it to a .txt or .csv file for
+          further processing and analysis.
+        </p>
+      </div>
 
-        <div class="project">
-            <a onclick="window.open('https://swimsaway.web.app', '_blank');"><i>Swims Away</i></a>
+      <div class="project">
+        <a onclick="window.open('https://covidbot19.web.app', '_blank');">CovidBot19</a>
 
-            <p>
-                <u>Description:</u> Swim away from the bear while avoiding all of the objects in the way!
-            </p>
+        <p>
+          <u>Description:</u> COVID-19 data tracking website and Discord bot.
+        </p>
 
-            <p>
-                <u>Background:</u>
-            </p>
-        </div>
+        <p>
+          <u>Background:</u> While chatting on the FBLA Discord server, I was contacted by one of the
+          administrators there, named "Megasteel", who was working on collecting COVID-19 data and
+          compiling it into a spreadsheet. Previously, he had been manually finding data on various
+          sites for every single state, but this was terribly inefficient. His request: make a web
+          scraper that would collect data from various sites and enter it into a spreadsheet. We
+          found another person to help, a person named "gido" from the Cyberpatriot Discord server,
+          and made a group chat where we began discussing the project.
+          <br>
+          Our initial plan was to scrape the data from sites that we had chosen ourselves, like the New
+          York Times, using Google Sheets functions that were supposedly able to retrieve and parse HTML.
+          However, after hours of struggling, we concluded that this would not work since the page format
+          was very hard to traverse. I had also attempted using a Python script to scrape, since Python has
+          numerous well-known scraping libraries, but ended up giving up on this plan as well. Now, we
+          were back to the drawing board. Our next idea was to find an API that had data on COVID-19. Now
+          that we were looking for API data, however, we decided to look for even more reliable and detailed
+          data. I happened to stumble upon a John Hopkins University API hosted by a GIS software company
+          known as Esri, known for their interactive GIS dashboards made through ArcGIS. This API was
+          reliable, coming from JHU, and was even more detailed, giving us access to county-level data
+          which was updated multiple times a day.
+          <br>
+          We decided to make a Discord bot (CovidBot19) which users could use to get updates on the pandemic
+          situation.
+        </p>
+      </div>
 
-        <div class="project">
-            <a onclick="window.open('https://erroroccurred.web.app', '_blank');">Error Occurred</a>
+      <div class="project">
+        <a onclick="window.open('https://wypretzel.web.app', '_blank');">The Missing Pretzels</a>
 
-            <p>
-                <u>Description:</u> Use the Hamming(16,11) Error Correction Code to find the error bits!
-            </p>
+        <p>
+          <u>Description:</u> Catch all of the pretzels falling from the sky by hovering over them!
+        </p>
 
-            <p>
-                <u>Background:</u>
-            </p>
-        </div>
+        <p>
+          <u>Platforms:</u> Web, Android
+        </p>
 
-        <div class="project">
-            <a onclick="window.open('https://erroroccurred.web.app', '_blank');">CSSA/CSSA Testing Portal/CSSA Learn</a>
+        <p>
+          <u>Background:</u>
+        </p>
+      </div>
 
-            <p>
-                Learn more about CSSA in the Ventures page!<a>(Click here)</a>
-            </p>
-        </div>
+      <div class="project">
+        <a onclick="window.open('https://swimsaway.web.app', '_blank');"><i>Swims Away</i></a>
+
+        <p>
+          <u>Description:</u> Swim away from the bear while avoiding all of the objects in
+          the way!
+        </p>
+
+        <p>
+          <u>Background:</u> In the Scioly.org Discord Server which I am an active member of,
+          I met someone with the username Fish. With one of the server administrators being
+          named Bear, we all had a running joke that Bear would "eat" Fish whenever she
+          appeared in the chat. One evening in 10th grade, I was bored and decided to turn
+          this into a game. With nothing better to do, I managed to finish the entire game
+          that night, only revising to add a couple extra features and fixes later on.
+        </p>
+      </div>
+
+      <div class="project">
+        <a onclick="window.open('https://erroroccurred.web.app', '_blank');">Error Occurred</a>
+
+        <p>
+          <u>Description:</u> Use the Hamming(16,11) Error Correction Code to find the error bits!
+        </p>
+
+        <p>
+          <u>Platforms:</u> Web, Android
+        </p>
+
+        <p>
+          <u>Background:</u> After watching 3Blue1Brown's videos on error correction, I was
+          absolutely captivated by the magic of the code and thought it would be fun to do
+          more just like these, so of course I coded this website to infinitely generate
+          Hamming(16,11) codes.
+        </p>
+      </div>
+
+      <div class="project">
+        <a onclick="window.open('https://cssa.dev', '_blank');">CSSA/CSSA Testing Portal (down for maintenance)/CSSA
+          Learn</a>
+
+        <p>
+          <u>Description:</u> CSSA aims to promote broader computer science education for
+          participants of all ages!
+        </p>
+      </div>
     </div>
-</body>
-
+  </body>
 </html>

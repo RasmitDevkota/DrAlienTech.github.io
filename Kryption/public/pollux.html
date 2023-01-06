@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Kryption</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500&display=swap" rel="stylesheet">
+
+    <script src='https://www.gstatic.com/firebasejs/8.2.1/firebase.js'></script>
+
+    <script src="https://chancejs.com/chance.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script src="quotes.js"></script>
+
+    <style>
+        * {
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: larger;
+            color: white;
+            background-color: black;
+        }
+
+        html {
+            display: flex;
+            justify-content: center;
+            margin-top: 1%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 50%;
+            margin-top: 2%;
+            padding: 0vh 0vw 4vh 0vw;
+        }
+
+        #main {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        #time {
+            font-size: 80%;
+        }
+
+        #newPolluxButtonWrapper {
+            display: flex;
+            justify-content: center;
+        }
+
+        #newPolluxButton {
+            font-size: 80%;
+        }
+
+        #settingsButtonWrapper {
+            display: flex;
+            justify-content: center;
+            font-size: 80%;
+        }
+
+        #settings {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: absolute;
+            z-index: 1000;
+            width: 30%;
+            margin-top: 5%;
+            margin-left: 7.5%;
+            margin-right: 7.5%;
+            padding: 2% 2%;
+            background-color: rgb(27, 27, 27);
+            border: 10px solid rgb(68, 68, 68);
+        }
+
+        #settings p,
+        #settings button {
+            font-size: 70%;
+        }
+
+        .settingsField,
+        .settingsValue,
+        #closeSettingsWrapper,
+        #settings>p {
+            background-color: unset;
+        }
+
+        .settingsField {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .settingsValue {
+            text-align: center;
+        }
+
+        .settingsValue>a:hover {
+            cursor: pointer;
+        }
+
+        .settingsInput {
+            margin-top: 2%;
+            width: 50%;
+        }
+
+        #closeSettingsWrapper {
+            display: flex;
+            justify-content: center;
+        }
+
+        input, button {
+            border: 2px solid white;
+        }
+
+        button {
+            width: 30%;
+            margin-top: 3%;
+        }
+
+        button:hover {
+            cursor: pointer;
+        }
+
+        #main {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        #questionText {
+            overflow-wrap: break-word;
+        }
+
+        #answerBox {
+            margin-top: 2%;
+            width: 50vw;
+            font-size: 2vw;
+        }
+    </style>
+</head>
+
+<p style="z-index: 999; margin-top: -5%; text-align: center;">
+    <button onclick="window.location='index.html'">Morse Typing</button>
+
+    <button onclick="window.location='pollux.html'">Pollux</button>
+
+    <button onclick="window.location='vigenere.html'">Vigenere</button>
+
+    <button onclick="window.location='porta.html'">Porta</button>
+
+    <button onclick="window.location='affine.html'">Affine</button>
+
+    <button onclick="window.location='patristocrat.html'">Patristocrat</button>
+
+    <button onclick="window.location='xenocrypt.html'">Xenocrypt</button>
+
+    <button onclick="window.location='atbash.html'">Atbash</button>
+</p>
+
+<body>
+
+    <div id="settings" style="display: none">
+        <div id="wordCount" class="settingsField">
+            <p id="wordCountValue" class="settingsValue">
+                Maximum # of Words (3-97) <br> <input id="wordCountInput" class="settingsInput" type="number" min="3"
+                    max="97" placeholder="Default: 15">
+                <a onclick="resetwordCount();"
+                    style="background-color: unset; font-size: 130%; line-height: 200%; width: 20%; height: fit-content;">Reset</a>
+            </p>
+        </div>
+
+        <p>
+            Note: Changes are saved on your device but it is recommended to refresh the page in order to make sure all
+            changes take place.
+        </p>
+
+        <div id="closeSettingsWrapper">
+            <button id="closeSettings" class="noselect"
+                onclick="document.getElementById('settings').style.display = 'none'">Close</button>
+        </div>
+    </div>
+
+    <div id="main">
+        <div id="questionText">
+
+        </div>
+
+        <div id="answerBoxWrapper">
+            <textarea id="answerBox" rows="3" placeholder="Type here..."></textarea>
+        </div>
+
+        <div id="timeWrapper">
+            <p id="time">Decode the pollux cipher!</p>
+        </div>
+
+        <div id="newPolluxButtonWrapper">
+            <button id="newPolluxButton" class="noselect" onclick="generate()">New Cipher</button>
+        </div>
+
+        <div id="settingsButtonWrapper">
+            <button id="settingsButton" class="noselect" onclick="settings()">Settings</button>
+        </div>
+    </div>
+
+    <script>
+        const questionText = document.getElementById("questionText");
+        const answerBox = document.getElementById("answerBox");
+        const time = document.getElementById("time");
+        const newPolluxButton = document.getElementById("newPolluxButton");
+        const settingsButton = document.getElementById("settingsButton");
+
+        const wordCountInput = document.getElementById("wordCountInput");
+        const toggleAutocheckerButton = document.getElementById("toggleAutocheckerButton");
+
+        let min_count = 3;
+        let max_count = Number(localStorage.getItem("polluxCount")) ? Number(localStorage.getItem("polluxCount")) : 15;
+
+        wordCountInput.placeholder = `Current: ${max_count}`;
+
+        const hintCount = 5;
+
+        const quote_lengths = Object.keys(quotes);
+
+        let startTime;
+
+        wordCountInput.oninput = function () {
+            if (this.value > 97) {
+                this.value = 97;
+            }
+
+            if (this.value == 0 || this.value.toString() == "") {
+                localStorage.setItem("polluxCount", "15");
+                max_count = 15;
+                wordCountInput.placeholder = `Default: 15`;
+            } else {
+                localStorage.setItem("polluxCount", this.value.toString());
+                max_count = this.value;
+                wordCountInput.placeholder = `Current: ${max_count}`;
+            }
+
+            generate();
+        };
+
+        function settings() {
+            document.getElementById("settings").style.display = "flex";
+        }
+
+        function resetwordCount() {
+            localStorage.setItem("polluxCount", "15");
+            max_count = 15;
+            wordCountInput.placeholder = `Default: 15`;
+            wordCountInput.value = ``;
+
+            generate();
+        }
+
+        function toggleAutochecker() {
+            autocheck = autocheck ? false : true;
+            localStorage.setItem("polluxToggleAutochecker", autocheck);
+            toggleAutocheckerButton.innerText = autocheck ? "ON" : "OFF";
+
+            generate();
+        }
+
+        const morse = {
+            "A": ".-",
+            "B": "-...",
+            "C": "-.-.",
+            "D": "-..",
+            "E": ".",
+            "F": "..-.",
+            "G": "--.",
+            "H": "....",
+            "I": "..",
+            "J": ".---",
+            "K": "-.-",
+            "L": ".-..",
+            "M": "--",
+            "N": "-.",
+            "O": "---",
+            "P": ".--.",
+            "Q": "--.-",
+            "R": ".-.",
+            "S": "...",
+            "T": "-",
+            "U": "..-",
+            "V": "...-",
+            "W": ".--",
+            "X": "-..-",
+            "Y": "-.--",
+            "Z": "--.."
+        };
+
+        function generate() {
+            correctAnswers = 0;
+            correctNeeded = 999999;
+
+            questionText.style.color = "white";
+            time.style.color = "white";
+            newPolluxButton.style.color = "white";
+            settingsButton.style.color = "white";
+
+            function randomQuote(a = min_count, b = max_count) {
+                const min = a;
+                const max = b;
+
+                const length = Math.floor(Math.random() * quote_lengths.length);
+                var tryQuoteLength = quote_lengths[length];
+
+                if (tryQuoteLength > max || tryQuoteLength < min) {
+                    return randomQuote(min, max);
+                }
+
+                const tryQuotes = quotes[tryQuoteLength];
+                const quote = tryQuotes[Math.floor(Math.random() * tryQuotes.length)];
+
+                return quote;
+            }
+
+            if (max_count < min_count) {
+                return resetwordCount();
+            }
+
+            const plaintext = randomQuote(min_count, max_count).replace(/[^A-Z ]/gi, "").toUpperCase();
+
+            const morsetext = plaintext.split("").map(pt => {
+                return pt == " " ? "/" : `${morse[pt]}/`;
+            }).join("");
+
+            function shuffle(str) {
+                var a = str.split(""),
+                    n = a.length;
+
+                for (var i = n - 1; i > 0; i--) {
+                    var j = Math.floor(Math.random() * (i + 1));
+                    var tmp = a[i];
+                    a[i] = a[j];
+                    a[j] = tmp;
+                }
+                return a.join("");
+            }
+
+            const morsetextAlphabet = shuffle("....---///");
+            const ciphertextAlphabet = shuffle("0123456789");
+
+            console.log(morsetextAlphabet, ciphertextAlphabet);
+
+            const mappings = new Object();
+
+            for (let n in morsetextAlphabet) {
+                let currentMappingsValue = mappings[morsetextAlphabet[n]] ?? [];
+                let newMappingsvalue = (currentMappingsValue + ciphertextAlphabet[n]).replace(/,/g, "");
+                mappings[morsetextAlphabet[n]] = newMappingsvalue.split("");
+            }
+
+            let mappingsHtml = `${mappings["."][0]}=., ${mappings["."][1]}=., ${mappings["-"][0]}=-, `;
+
+            if (hintCount == 4) {
+                mappingsHtml += `and ${mappings["/"][0]}=X`;
+            } else {
+                mappingsHtml += `${mappings["/"][0]}=X, and ${mappings["/"][1]}=X`;
+            }
+
+            time.innerHTML = `Decode the pollux cipher using the replacements ${mappingsHtml}!`
+
+            console.log(plaintext, "\n\nMorsetext:", morsetext);
+
+            const ciphertext = morsetext.split("").map(mt => {
+                return mappings[mt][Math.floor(Math.random() * mappings[mt].length)];
+            }).join("");
+
+            questionText.innerHTML = ciphertext;
+
+            console.log("Plaintext:", plaintext, "\n\nCiphertext:", ciphertext);
+
+            startTime = new Date();
+
+            answerBox.oninput = function () {
+                if (this.value.toUpperCase() == plaintext) {
+                    questionText.style.color = "#00FA9A";
+                    answerBox.style.color = "#00FA9A";
+                    time.style.color = "#00FA9A";
+                    newPolluxButton.style.color = "#00FA9A";
+                    settingsButton.style.color = "#00FA9A";
+
+                    var timeScore = (new Date() - startTime) / 1000;
+                    time.innerHTML = `Correct! You solved it in ${timeScore} seconds!`;
+                } else if (this.value.length == plaintext.length && this.value.toUpperCase() != plaintext) {
+                    questionText.style.color = "#FF6347";
+                    answerBox.style.color = "#FF6347";
+                    time.style.color = "#FF6347";
+                    newPolluxButton.style.color = "#FF6347";
+                    settingsButton.style.color = "#FF6347";
+
+                    time.innerHTML = `Oops, something's wrong! Check for mistakes!`;
+                } else {
+                    questionText.style.color = "white";
+                    answerBox.style.color = "white";
+                    time.style.color = "white";
+                    newPolluxButton.style.color = "white";
+                    settingsButton.style.color = "white";
+
+                    time.innerHTML = `Decode the pollux cipher using the replacements ${mappingsHtml}!`
+                }
+            };
+        }
+
+        document.addEventListener('keydown', function (event) {
+            switch (event.keyCode) {
+                case 13:
+                    generate();
+                    break;
+            }
+        });
+
+        generate();
+    </script>
+
+</body>
+
+</html>

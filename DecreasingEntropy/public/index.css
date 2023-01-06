@@ -1,0 +1,21 @@
+* {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: lighter;
+    font-style: italic;
+    color: white;
+}
+
+body {
+    background-color: black;
+    text-align: center;
+}
+
+.paper {
+    border: 2px solid white;
+    padding: 2vh 2vw;
+}
+
+a:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}

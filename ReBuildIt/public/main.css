@@ -1,0 +1,25 @@
+@import "Quicksand-Regular.ttf";
+
+:root {
+    --dark-purple: #44245c;
+    --blueprint: #0058bc;
+    --bamboo: #6DE98C;
+    --dark-bamboo: #66d482;
+    --grass: #00bc84;
+}
+
+* {
+    font-family: 'Quicksand', sans-serif;
+}
+
+body {
+    margin: 0px;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+}

@@ -20,7 +20,6 @@
 }
 
 :root {
-    /* Basic Colors */
     --b-light: #f0ebf1;
     --b-sand: #e0bba1;
     --b-dark: #212625;
@@ -30,8 +29,6 @@
     --b-shade: #33312b;
     --b-white: #ffffff;
     --b-skin: #f6e5dc;
-
-    /* AlienTech Colors */
     --at-green: #b3ed99;
     --at-lightgreen: #cce7bc;
     --at-darkgreen: #7aa16a;
@@ -45,18 +42,13 @@
 body {
     margin: 0px;
     background-color: var(--b-shade);
-    font-family: "Alef Hebrew",
-            “Helvetica Neue”,
-            Helvetica,
-            Arial,
-            sans-serif;
+    font-family: "Alef Hebrew", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 nav {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 100%;
     background-color: black;
 }
 
@@ -79,8 +71,14 @@ nav > div > a {
     text-decoration: none;
 }
 
-body > div {
-    width: 100vw;
+#main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#main > div {
+    width: 80vw;
 }
 
 .title {
@@ -91,7 +89,10 @@ body > div {
 
 .cover {
     width: 40vw;
-    height: auto;
     padding: 0%;
     margin: 0vh 30vw 0vh 30vw;
+}
+
+.other-site:hover {
+    cursor: pointer;
 }

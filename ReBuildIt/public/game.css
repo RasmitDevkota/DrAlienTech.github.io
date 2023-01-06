@@ -1,0 +1,78 @@
+body {
+    background: var(--dark-bamboo);
+}
+
+#game {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.game-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 90vw;
+    margin: 1vh 5vw;
+}
+
+.game-row>p {
+    margin: 0px !important;
+    padding: 0.5vw;
+    font-size: 1.7vw;
+    text-align: center;
+    border: 3px solid var(--grass);
+    background-color: var(--bamboo);
+}
+
+.game-row>button {
+    width: 20vw;
+    font-size: xx-large;
+    font-weight: bold;
+    text-align: center;
+    border: 3px solid var(--grass);
+    border-radius: 7px;
+    background-color: var(--bamboo);
+}
+
+#waitingCard {
+    width: 100vw;
+    height: 100vh;
+    margin: 0px 0px !important;
+    z-index: 1;
+    position: absolute;
+    font-size: 3vw;
+    text-align: center;
+    color: white;
+    background-color: var(--grass);
+}
+
+#waitingCard>div {
+    height: 30vh;
+    margin: 35vh 0vw;
+}
+
+#referenceCanvas {
+    border: 3px solid black;
+    margin: 0% !important;
+}
+
+#referenceImage {
+    border: 3px solid black;
+    background: var(--blueprint);
+}
+
+canvas:focus {
+    outline: none;
+}
+
+#drawCanvas {
+    border: 3px solid black;
+    background: var(--blueprint);
+    margin: 0% !important;
+}
+
+#buildCanvas {
+    border: 3px solid black;
+    margin: 0% !important;
+}

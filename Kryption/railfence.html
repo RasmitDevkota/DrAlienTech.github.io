@@ -167,7 +167,9 @@
 </head>
 
 <p style="z-index: 999; margin-top: -5%; text-align: center;">
-    <button onclick="window.location='index.html'">Morse</button>
+    <button onclick="window.location='index.html'">Morse Typing</button>
+
+    <button onclick="window.location='pollux.html'">Pollux</button>
 
     <button onclick="window.location='vigenere.html'">Vigenere</button>
 
@@ -176,6 +178,10 @@
     <button onclick="window.location='affine.html'">Affine</button>
 
     <button onclick="window.location='patristocrat.html'">Patristocrat</button>
+
+    <button onclick="window.location='xenocrypt.html'">Xenocrypt</button>
+
+    	<button onclick="window.location='atbash.html'">Atbash</button>
 </p>
 
 <body>
@@ -230,18 +236,18 @@
     <script>
         const questionTable = document.getElementById("questionTable");
         const time = document.getElementById("time");
-        const newPatristocratButton = document.getElementById("newPatristocratButton");
+        const newPatristocratButton = document.getElementById("newRailfenceButton");
         const settingsButton = document.getElementById("settingsButton");
 
         const wordCountInput = document.getElementById("wordCountInput");
         const toggleAutocheckerButton = document.getElementById("toggleAutocheckerButton")
 
         let min_count = 3;
-        let max_count = Number(localStorage.getItem("patristocratCount")) ? Number(localStorage.getItem("patristocratCount")) : 5;
+        let max_count = Number(localStorage.getItem("railfenceCount")) ? Number(localStorage.getItem("railfenceCount")) : 5;
 
         wordCountInput.placeholder = `Current: ${max_count}`;
 
-        let autocheck = localStorage.getItem("patristocratToggleAutochecker") == null ? true : (localStorage.getItem("patristocratToggleAutochecker") == "true" ? true : false);
+        let autocheck = localStorage.getItem("railfenceToggleAutochecker") == null ? true : (localStorage.getItem("railfenceToggleAutochecker") == "true" ? true : false);
         toggleAutocheckerButton.innerHTML = autocheck ? "ON" : "OFF";
 
         const quote_lengths = Object.keys(quotes);
@@ -284,7 +290,7 @@
 
         function toggleAutochecker() {
             autocheck = autocheck ? false : true;
-            localStorage.setItem("patristocratToggleAutochecker", autocheck);
+            localStorage.setItem("railfenceToggleAutochecker", autocheck);
             toggleAutocheckerButton.innerText = autocheck ? "ON" : "OFF";
 
             generate();

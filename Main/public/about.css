@@ -1,0 +1,13 @@
+p {
+    font-size: 1.5vw;
+}
+
+.columns {
+    display: flex;
+    flex-direction: row;
+}
+
+.column {
+    margin: 0vh 1vw;
+    width: 50vw;
+}

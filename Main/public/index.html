@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Rasmit Devkota</title>
 
+    <script src="https://kit.fontawesome.com/c54efb68d5.js" crossorigin="anonymous"></script>
+
     <script src="script.js"></script>
     <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="index.css">
   </head>
 
   <body>
@@ -17,17 +20,38 @@
 
       <div>
         <a href="about.html">About</a>
-        <a href="projects.html">Projects</a>
         <a href="index.html">Home</a>
-        <a href="ventures.html">Ventures</a>
-        <a href="contact.html">Contact</a>
+        <a href="projects.html">Projects</a>
       </div>
     </nav>
 
-    <div>
+    <div id="main">
       <h1 class="title">Rasmit Devkota</h1>
 
-      <img class="cover" src="wordcloud.png" alt="">
+      <h1>Hi! Welcome to my personal website!</h1>
+
+      <img class="cover" src="./wordcloud.png" alt="">
+
+      <h2>While you're here, I recommend checking out some of my work on other sites!</h2>
+
+      <div id="other-sites">
+        <div>
+          <p>My GitHub Profile, where I keep my (declassified) computer science projects ;)</p>
+
+          <p class="other-site fa-brands fa-github" style="font-size: 4vw;"
+            onclick="window.open('https://github.com/DrAlienTech', '_blank')"></p>
+        </div>
+
+        <div>
+          <p>My Scioly.org Wiki User Page, where I put all my Science Olympiad-related
+            information, including competition results and volunteer roles!</p>
+
+          <img class="other-site" src="scioly.png" style="width: 8vw;"
+            onclick="window.open('https://scioly.org/wiki/index.php/User:RasmitDevkota', '_blank')">
+        </div>
+      </div>
+
+      <br>
     </div>
   </body>
 </html>
